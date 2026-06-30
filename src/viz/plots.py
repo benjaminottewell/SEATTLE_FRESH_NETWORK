@@ -24,7 +24,7 @@ def plot_demand_by_neighborhood(ranked, output_path=None):
     data = ranked.sort_values("daily_demand")  
 
     fig, ax = plt.subplots(figsize=(9, 5))
-    ax.barh(data["neighborhood"], data["daily_demand"], color="#462bbe")
+    ax.barh(data["neighborhood"], data["daily_demand"], color="#4227b8")
     ax.set_xlabel("Estimated demand  ($ / day)")
     ax.set_title("Daily demand by neighborhood (placeholder populations)")
     for spine in ("top", "right"):      

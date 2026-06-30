@@ -17,7 +17,8 @@ from src.config import PROJECT_ROOT, get_census_key
 # King County, WA, in Census FIPS codes (the government's ID numbers for places).
 STATE_FIPS = "53"
 COUNTY_FIPS = "033"
-ACS_YEAR = "2023"
+ACS_YEAR = "2024"   # latest available ACS 5-year vintage (covers 2020-2024)
+LODES_YEAR = "2023"  # latest available LODES workplace-jobs year for WA
 CACHE_DIR = PROJECT_ROOT / "data" / "raw"
 
 
@@ -63,9 +64,54 @@ def fetch_tract_population(year=ACS_YEAR, use_cache=True):
     return df
 
 
+def fetch_tract_workers(year=LODES_YEAR, use_cache=True):
+    """Return a DataFrame of total WORKER JOBS per census tract in King County.
+
+    Source: LEHD LODES Workplace Area Characteristics -- jobs counted at their
+    WORK location, i.e. the daytime/worker-population proxy. We download the
+    statewide file, keep only King County blocks, and sum jobs up to the tract.
+    Columns: geoid, worker_jobs.
+    """
+    cache_path = CACHE_DIR / f"lodes{year}_king_tract_workers.csv"
+
+    if use_cache and cache_path.exists():
+        print(f"Loading cached LODES data <- {cache_path.name}")
+        return pd.read_csv(cache_path, dtype={"geoid": str})
+
+    url = (f"https://lehd.ces.census.gov/data/lodes/LODES8/wa/wac/"
+           f"wa_wac_S000_JT00_{year}.csv.gz")
+    print(f"Fetching LODES {year} workplace jobs ...")
+    # w_geocode is a 15-digit block id -- read as text so leading zeros survive.
+    df = pd.read_csv(url, dtype={"w_geocode": str}, usecols=["w_geocode", "C000"])
+
+    # Keep only King County: blocks whose id starts with state 53 + county 033.
+    king = df[df["w_geocode"].str.startswith("53033")].copy()
+
+    # First 11 digits of a block id ARE its tract id -> group and sum the jobs.
+    king["geoid"] = king["w_geocode"].str[:11]
+    workers = (king.groupby("geoid", as_index=False)["C000"].sum()
+                   .rename(columns={"C000": "worker_jobs"}))
+
+    CACHE_DIR.mkdir(parents=True, exist_ok=True)
+    workers.to_csv(cache_path, index=False)
+    print(f"Saved {len(workers)} tracts -> data/raw/{cache_path.name}")
+    return workers
+
+
 if __name__ == "__main__":
-    tracts = fetch_tract_population()
-    print(f"\nKing County tracts : {len(tracts)}")
-    print(f"Total population    : {tracts['population'].sum():,}")
-    print("\nLargest 5 tracts by population:")
-    print(tracts.sort_values("population", ascending=False).head().to_string(index=False))
+    residents = fetch_tract_population()
+    workers = fetch_tract_workers()
+
+    # Combine the two so we can compare the SAME tracts side by side.
+    merged = residents.merge(workers, on="geoid", how="left")
+    merged["worker_jobs"] = merged["worker_jobs"].fillna(0).astype(int)
+
+    print(f"\nKing County totals:")
+    print(f"  residents  (ACS {ACS_YEAR})    : {residents['population'].sum():>10,}")
+    print(f"  worker jobs (LODES {LODES_YEAR}): {workers['worker_jobs'].sum():>10,}")
+
+    cols = ["name", "population", "worker_jobs"]
+    print("\nTop 5 tracts by RESIDENTS:")
+    print(merged.sort_values("population", ascending=False).head()[cols].to_string(index=False))
+    print("\nTop 5 tracts by WORKERS  (the daytime core -- note how different!):")
+    print(merged.sort_values("worker_jobs", ascending=False).head()[cols].to_string(index=False))

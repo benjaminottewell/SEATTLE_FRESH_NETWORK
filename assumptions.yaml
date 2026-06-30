@@ -1,0 +1,157 @@
+# ============================================================================
+#  assumptions.yaml  --  the single source of truth for every tunable number
+# ============================================================================
+#
+# This file is the heart of the project's credibility. EVERY operational and
+# cost parameter lives here, and every one carries a `source` field:
+#
+#     source: "cited"   -> backed by a published benchmark (put the link/ref in `note`)
+#     source: "assumed" -> our own estimate (explain the reasoning in `note`)
+#
+# Rule: never bury a number in code. If a value matters, it lives here.
+# The sensitivity analysis (Phase 5) sweeps the values flagged `star: true`.
+#
+# Values below are PLACEHOLDERS to be replaced with sourced numbers as we build.
+# ============================================================================
+
+meta:
+  project: "Konbini-Seattle feasibility model"
+  version: "0.1.0-skeleton"
+  currency: "USD"
+  notes: "v1.0 study area = dense northern core; production hub = SoDo."
+
+# ----------------------------------------------------------------------------
+# 1. STUDY AREA  (Phase 1-2)
+# ----------------------------------------------------------------------------
+study_area:
+  neighborhoods:
+    value: ["Downtown/CBD", "Belltown", "South Lake Union", "Capitol Hill",
+            "First Hill", "Pioneer Square", "Chinatown-International District"]
+    source: "assumed"
+    note: "Chosen for high density + daytime population; see KONBINI_SEATTLE_PLAN.md sec 4."
+  production_hub:
+    value: "SoDo industrial district"
+    source: "assumed"
+    note: "Industrial zoning, port proximity, freeway access. Fixed-hub framing (Phase 3)."
+
+# ----------------------------------------------------------------------------
+# 2. DEMAND  (Phase 1)   --  the most uncertain layer
+#    daily_demand_per_node = catchment_pop x capture_rate x visit_freq x avg_ticket
+# ----------------------------------------------------------------------------
+demand:
+  capture_rate:
+    value: 0.02          # fraction of catchment population that visits per day
+    range: [0.005, 0.05] # swept in sensitivity analysis
+    source: "assumed"
+    star: true           # THE headline sensitivity parameter
+    note: "PLACEHOLDER. Anchor to published cafe/convenience transactions-per-day benchmarks."
+  visit_frequency:
+    value: 1.0           # visits per capturing customer per day
+    source: "assumed"
+    note: "PLACEHOLDER."
+  avg_ticket:
+    value: 7.00          # average $ spent per visit
+    range: [5.0, 12.0]
+    source: "assumed"
+    note: "PLACEHOLDER. Anchor to convenience/grab-and-go basket benchmarks."
+  use_daytime_population:
+    value: true
+    source: "assumed"
+    note: "Core is daytime-driven. Daily-average is the simpler defensible default."
+
+# ----------------------------------------------------------------------------
+# 3. NETWORK / DRIVE-TIME  (Phase 2)
+# ----------------------------------------------------------------------------
+network:
+  fresh_delivery_window_min:
+    value: 30
+    source: "assumed"
+    note: "PLACEHOLDER. Max drive-time hub->store for short-shelf-life items."
+  avg_speed_kmh:
+    value: 25
+    source: "assumed"
+    note: "PLACEHOLDER. Urban core average incl. traffic; refine from OSM speed tags."
+
+# ----------------------------------------------------------------------------
+# 4. FACILITY LOCATION  (Phase 3)  --  Maximal Covering Location Problem
+# ----------------------------------------------------------------------------
+facility_location:
+  num_nodes_p:
+    value: 10            # number of stores to place
+    range: [5, 20]       # sweep -> network scale becomes a knob
+    source: "assumed"
+    star: true
+    note: "MCLP fixed-p. Sweeping p drives routing + economics."
+  coverage_radius_m:
+    value: 400           # walk/drive catchment radius per node
+    source: "assumed"
+    note: "PLACEHOLDER. ~5 min walk. Area-dominance density constraint applies."
+
+# ----------------------------------------------------------------------------
+# 5. ROUTING / CADENCE  (Phase 4)  --  Vehicle Routing Problem w/ time windows
+# ----------------------------------------------------------------------------
+routing:
+  deliveries_per_day:
+    value: 3
+    range: [1, 4]
+    source: "cited"
+    star: true
+    note: "Konbini multi-daily fresh cadence. CITE published 7-Eleven Japan benchmark."
+  vehicle_capacity_units:
+    value: 200
+    source: "assumed"
+    note: "PLACEHOLDER. Per-vehicle load in store-units."
+  vehicle_fixed_cost_per_day:
+    value: 150
+    source: "assumed"
+    note: "PLACEHOLDER. Lease + insurance + depreciation, refrigerated van."
+  driver_cost_per_hour:
+    value: 30
+    source: "assumed"
+    note: "PLACEHOLDER. Seattle wage + burden. Link to economics.labor."
+
+# ----------------------------------------------------------------------------
+# 6. ECONOMICS  (Phase 5)
+# ----------------------------------------------------------------------------
+economics:
+  node_rent_per_month:
+    value: 8000
+    source: "assumed"
+    note: "PLACEHOLDER. Small core retail slot."
+  labor_wage_per_hour:
+    value: 20.76
+    range: [18.0, 26.0]
+    source: "cited"
+    star: true
+    note: "Seattle minimum wage. CITE official 2025/2026 rate; confirm current figure."
+  staff_hours_per_day:
+    value: 32            # e.g. ~2 staff x 16 open-hours
+    source: "assumed"
+    note: "PLACEHOLDER."
+  product_cost_ratio:
+    value: 0.65          # COGS as fraction of revenue
+    source: "assumed"
+    note: "PLACEHOLDER. Convenience/fresh blended margin."
+  spoilage_rate:
+    value: 0.08          # fraction of fresh product wasted
+    range: [0.03, 0.15]
+    source: "assumed"
+    star: true
+    note: "PLACEHOLDER. Fresh short-shelf-life waste."
+  hub_opex_per_day:
+    value: 5000
+    source: "assumed"
+    note: "PLACEHOLDER. SoDo commissary daily operating cost, allocated across nodes."
+
+# ----------------------------------------------------------------------------
+# 7. FEASIBILITY BAR  (Phase 5)  --  PRE-REGISTERED. Do not change after seeing results.
+# ----------------------------------------------------------------------------
+feasibility_bar:
+  primary:
+    metric: "contribution_margin_per_node"
+    rule: "> 0"
+    note: "Revenue covers variable costs (product + delivery share + direct labor)."
+  secondary:
+    metric: "payback_period_years"
+    rule: "< 5"
+    note: "Operator-realistic lens; depends on capex guesses, so secondary only."

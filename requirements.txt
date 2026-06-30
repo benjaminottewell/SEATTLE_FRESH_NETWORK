@@ -1,0 +1,36 @@
+# Konbini-Seattle dependencies.
+#
+# NOTE: versions are intentionally NOT pinned yet. We will lock exact versions
+# (pip freeze) only AFTER they install cleanly on this machine, so the lockfile
+# reflects what actually worked rather than a hopeful guess. See README "Reproducing".
+#
+# Heads-up: a few of these (osmnx, geopandas, ortools) can be slow to publish
+# installers for the newest Python releases. If install fails on Python 3.14,
+# the fix is a 3.11/3.12 virtual environment -- documented in the README.
+
+# --- Geospatial / road networks ---
+osmnx              # download + build routable road graphs from OpenStreetMap
+networkx           # graph algorithms (shortest paths -> drive times)
+geopandas          # spatial dataframes
+shapely            # geometry primitives
+contextily         # basemap tiles for maps
+
+# --- Optimization ---
+pulp               # MILP modeling (facility location)
+ortools            # Google OR-Tools: CP-SAT + vehicle routing (VRPTW)
+
+# --- Data / demand / economics ---
+pandas
+numpy
+scikit-learn       # demand modeling helpers
+statsmodels        # demand modeling helpers
+pyyaml             # read assumptions.yaml
+requests           # Census API pulls
+
+# --- Visualization ---
+matplotlib
+plotly
+folium             # interactive Leaflet maps
+
+# --- Notebooks ---
+jupyter

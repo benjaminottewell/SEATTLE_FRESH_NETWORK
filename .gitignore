@@ -1,0 +1,27 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.ipynb_checkpoints/
+
+# --- Virtual environment ---
+.venv/
+venv/
+env/
+
+# --- Data caches (NEVER commit large raw pulls; keep folders via .gitkeep) ---
+data/raw/*
+data/interim/*
+data/processed/*
+!data/**/.gitkeep
+
+# --- Outputs are regenerated; keep folders, ignore the big files ---
+outputs/figures/*
+outputs/tables/*
+!outputs/**/.gitkeep
+
+# --- OS / editor noise ---
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

@@ -1,0 +1,79 @@
+"""
+config.py -- the single doorway between assumptions.yaml and our code.
+
+Every tunable number in this project lives in assumptions.yaml, NOT in code.
+This module reads that file and hands the numbers to whatever code asks for
+them. Import it anywhere:
+
+    from src.config import load_assumptions, get_value
+    a = load_assumptions()
+    rate = get_value(a, "demand", "capture_rate")   # -> 0.02
+"""
+
+from pathlib import Path
+import os
+import yaml
+
+# Figure out where assumptions.yaml lives, no matter where this code is run from.
+# __file__ is THIS file (src/config.py). .parent is src/. .parent.parent is the
+# project root -- the folder that contains assumptions.yaml.
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+ASSUMPTIONS_PATH = PROJECT_ROOT / "assumptions.yaml"
+
+
+def load_assumptions(path=ASSUMPTIONS_PATH):
+    """Open assumptions.yaml and return it as a nested Python dictionary.
+
+    A 'dictionary' is Python's labeled lookup: assumptions["demand"]["capture_rate"]
+    walks down the same structure you see in the YAML file.
+    """
+    with open(path, "r", encoding="utf-8") as f:
+        return yaml.safe_load(f)
+
+
+def get_value(assumptions, *keys):
+    """Dig down through the given keys and return that parameter's 'value' field.
+
+    Each parameter in the YAML looks like:
+        capture_rate:
+          value: 0.02
+          range: [0.005, 0.05]
+          source: assumed
+    So get_value(a, "demand", "capture_rate") walks to that block and returns 0.02
+    """
+    node = assumptions
+    for key in keys:
+        node = node[key]
+    return node["value"]
+
+
+def get_census_key():
+    """Return your Census API key, or None if it isn't set up yet.
+
+    Looks first at the CENSUS_API_KEY environment variable, then at a local
+    .env file in the project root. The .env file is git-ignored, so your key
+    stays private and never gets committed.
+    """
+    key = os.environ.get("CENSUS_API_KEY")
+    if key:
+        return key.strip()
+
+    env_path = PROJECT_ROOT / ".env"
+    if env_path.exists():
+        for line in env_path.read_text(encoding="utf-8").splitlines():
+            line = line.strip()
+            if line.startswith("CENSUS_API_KEY="):
+                return line.split("=", 1)[1].strip().strip('"').strip("'")
+    return None
+
+
+# Running this file directly (python src/config.py) prints a quick sanity check,
+# so you can confirm the numbers are being read correctly.
+if __name__ == "__main__":
+    a = load_assumptions()
+    print("Loaded assumptions.yaml OK. A few values:")
+    print("  capture_rate     =", get_value(a, "demand", "capture_rate"))
+    print("  avg_ticket       =", get_value(a, "demand", "avg_ticket"))
+    print("  num_nodes_p      =", get_value(a, "facility_location", "num_nodes_p"))
+    print("  labor_wage/hour  =", get_value(a, "economics", "labor_wage_per_hour"))
+    print("  census key       =", "FOUND" if get_census_key() else "not set up yet")

@@ -66,19 +66,7 @@ if __name__ == "__main__":
     print(f"CRS: {hoods.crs}")
     print(hoods[["neighborhood"]].to_string(index=False))
 
-    # Draw the study area -- our first look at the actual model geography.
-    import matplotlib
-    matplotlib.use("Agg")
-    import matplotlib.pyplot as plt
-
-    ax = hoods.plot(column="neighborhood", figsize=(9, 9), edgecolor="white",
-                    linewidth=0.8, cmap="tab10", legend=True)
-    for _, row in hoods.iterrows():
-        pt = row.geometry.representative_point()
-        ax.annotate(row["neighborhood"], (pt.x, pt.y), fontsize=7, ha="center")
-    ax.set_title("Study area: 7 northern-core neighborhoods")
-    ax.axis("off")
-    out = PROJECT_ROOT / "outputs" / "figures" / "study_neighborhoods.png"
-    plt.savefig(out, dpi=150, bbox_inches="tight")
-    plt.close()
+    # Draw the study area using the shared, readable map style (src/viz).
+    from src.viz.plots import plot_study_area
+    out = plot_study_area(hoods)
     print(f"\nSaved map -> {out}")

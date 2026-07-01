@@ -150,6 +150,60 @@ def plot_tract_assignment(tracts, hoods, output_path=None, basemap=True):
     return output_path
 
 
+def plot_store_sites(points, chosen_ids, hoods, radius_m, output_path=None, basemap=True):
+    """Map of MCLP-chosen store sites with their walkshed coverage circles.
+
+    `points` are the demand/candidate corners (meters CRS) with pid + weight;
+    dot size scales with demand weight so the coverage logic is visible.
+    """
+    import geopandas as gpd
+    import numpy as np
+    import matplotlib.lines as mlines
+    import matplotlib.patches as mpatches
+
+    set_plot_style()
+    if output_path is None:
+        output_path = FIGURES_DIR / "store_sites.png"
+
+    pts = points.to_crs(3857)
+    hd = hoods.to_crs(3857)
+    chosen = points[points["pid"].isin(chosen_ids)]
+    walksheds = gpd.GeoSeries(chosen.geometry.buffer(radius_m), crs=points.crs).to_crs(3857)
+    chosen = chosen.to_crs(3857)
+
+    fig, ax = plt.subplots(figsize=(12, 12))
+    ax.scatter(pts.geometry.x, pts.geometry.y, s=np.clip(pts["weight"] / 25, 2, 70),
+               color="#4a6fa5", alpha=0.45, linewidths=0, zorder=2)
+    hd.boundary.plot(ax=ax, color="black", linewidth=1.2, zorder=3)
+    walksheds.plot(ax=ax, facecolor="#e4572e", alpha=0.18, edgecolor="#e4572e",
+                   linewidth=1.5, zorder=4)
+    ax.scatter(chosen.geometry.x, chosen.geometry.y, s=260, marker="*",
+               color="#c1121f", edgecolor="white", linewidth=1, zorder=5)
+
+    if basemap:
+        try:
+            import contextily as cx
+            cx.add_basemap(ax, source=cx.providers.CartoDB.Positron)
+        except Exception as e:
+            print(f"(basemap skipped: {e})")
+
+    handles = [
+        mlines.Line2D([], [], color="#4a6fa5", marker="o", linestyle="", alpha=0.6,
+                      markersize=8, label="Demand at corners (size = catchment)"),
+        mlines.Line2D([], [], color="#c1121f", marker="*", linestyle="",
+                      markersize=16, label="Chosen store site"),
+        mpatches.Patch(facecolor="#e4572e", alpha=0.25, edgecolor="#e4572e",
+                       label=f"{radius_m} m walkshed"),
+    ]
+    ax.legend(handles=handles, loc="upper center", bbox_to_anchor=(0.5, -0.02),
+              fontsize=12, frameon=True, framealpha=0.95, borderpad=0.9)
+    ax.set_title(f"Optimized store placement ({len(chosen_ids)} sites, MCLP)", pad=14)
+    ax.axis("off")
+    fig.savefig(output_path)
+    plt.close(fig)
+    return output_path
+
+
 def plot_hub_routes(G, routes, hub_latlon, output_path=None):
     """Map of fastest delivery routes from the SoDo hub to each neighborhood.
 

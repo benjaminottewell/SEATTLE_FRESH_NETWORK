@@ -49,12 +49,13 @@ def assign_tracts_to_neighborhoods():
     return gpd.GeoDataFrame(result, geometry="geometry", crs=tracts.crs)
 
 
-def apportion_to_neighborhoods():
-    """Split each tract's people across the neighborhoods it overlaps, by area share.
+def tract_neighborhood_pieces():
+    """Cut tracts along neighborhood lines; each piece carries its area share of people.
 
-    More accurate than whole-tract assignment when tracts straddle these small
-    neighborhoods (assumes people are spread evenly within a tract).
-    Returns a DataFrame: neighborhood, residents, worker_jobs.
+    Returns a GeoDataFrame (WORKING_CRS): geoid, neighborhood, residents, workers,
+    geometry -- one row per (tract x neighborhood) overlap. This is the finest
+    demand surface we have; both the neighborhood totals and the Phase-3 siting
+    inputs are built from it.
     """
     tracts = fetch_tract_boundaries().to_crs(WORKING_CRS)
     hoods = fetch_study_neighborhoods().to_crs(WORKING_CRS)
@@ -65,12 +66,19 @@ def apportion_to_neighborhoods():
     tracts[["population", "worker_jobs"]] = tracts[["population", "worker_jobs"]].fillna(0)
     tracts["tract_area"] = tracts.geometry.area
 
-    # Cut the tracts along neighborhood lines -> one piece per (tract, neighborhood) overlap.
     pieces = gpd.overlay(tracts, hoods[["neighborhood", "geometry"]], how="intersection")
     pieces["frac"] = pieces.geometry.area / pieces["tract_area"]   # share of tract in this piece
     pieces["residents"] = pieces["population"] * pieces["frac"]
     pieces["workers"] = pieces["worker_jobs"] * pieces["frac"]
+    return pieces[["geoid", "neighborhood", "residents", "workers", "geometry"]]
 
+
+def apportion_to_neighborhoods():
+    """Sum the tract pieces up to per-neighborhood totals.
+
+    Returns a DataFrame: neighborhood, residents, worker_jobs.
+    """
+    pieces = tract_neighborhood_pieces()
     out = (pieces.groupby("neighborhood")
                  .agg(residents=("residents", "sum"), worker_jobs=("workers", "sum"))
                  .round().astype(int).reset_index())

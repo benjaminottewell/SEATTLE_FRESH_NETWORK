@@ -14,7 +14,7 @@ import requests
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
 from src.config import PROJECT_ROOT, get_census_key
 
-# King County, WA, in Census FIPS codes (the government's ID numbers for places).
+# King County, WA (state + county FIPS).
 STATE_FIPS = "53"
 COUNTY_FIPS = "033"
 ACS_YEAR = "2024"   # latest available ACS 5-year vintage (covers 2020-2024)
@@ -30,7 +30,6 @@ def fetch_tract_population(year=ACS_YEAR, use_cache=True):
     """
     cache_path = CACHE_DIR / f"acs{year}_king_tract_population.csv"
 
-    # If we already pulled this once, just read the saved file -- no API call.
     if use_cache and cache_path.exists():
         print(f"Loading cached Census data <- {cache_path.name}")
         return pd.read_csv(cache_path, dtype={"geoid": str, "tract": str})
@@ -42,13 +41,13 @@ def fetch_tract_population(year=ACS_YEAR, use_cache=True):
     print(f"Fetching ACS {year} tract population from the Census API ...")
     url = f"https://api.census.gov/data/{year}/acs/acs5"
     params = {
-        "get": "NAME,B01003_001E",                       # B01003_001E = total population
-        "for": "tract:*",                                # every tract...
-        "in": f"state:{STATE_FIPS} county:{COUNTY_FIPS}",  # ...in King County
+        "get": "NAME,B01003_001E",   # B01003_001E = total population
+        "for": "tract:*",
+        "in": f"state:{STATE_FIPS} county:{COUNTY_FIPS}",
         "key": key,
     }
     resp = requests.get(url, params=params, timeout=60)
-    resp.raise_for_status()                              # blow up loudly if the request failed
+    resp.raise_for_status()
     rows = resp.json()
 
     # The API returns a list of lists: rows[0] is the header, the rest are data.
@@ -102,7 +101,6 @@ if __name__ == "__main__":
     residents = fetch_tract_population()
     workers = fetch_tract_workers()
 
-    # Combine the two so we can compare the SAME tracts side by side.
     merged = residents.merge(workers, on="geoid", how="left")
     merged["worker_jobs"] = merged["worker_jobs"].fillna(0).astype(int)
 
@@ -113,5 +111,5 @@ if __name__ == "__main__":
     cols = ["name", "population", "worker_jobs"]
     print("\nTop 5 tracts by RESIDENTS:")
     print(merged.sort_values("population", ascending=False).head()[cols].to_string(index=False))
-    print("\nTop 5 tracts by WORKERS  (the daytime core -- note how different!):")
+    print("\nTop 5 tracts by WORKERS (the daytime core):")
     print(merged.sort_values("worker_jobs", ascending=False).head()[cols].to_string(index=False))

@@ -54,10 +54,19 @@ demand:
     range: [5.0, 12.0]
     source: "assumed"
     note: "PLACEHOLDER. Anchor to convenience/grab-and-go basket benchmarks."
-  use_daytime_population:
-    value: true
+  # Catchment = worker_weight * workers + resident_weight * residents.
+  # The core is daytime-driven, so a present worker counts more than a resident
+  # (residents are partly away at work and shop more from home).
+  worker_weight:
+    value: 1.0
     source: "assumed"
-    note: "Core is daytime-driven. Daily-average is the simpler defensible default."
+    note: "Reference: 1 daytime worker = 1 catchment unit. capture_rate sets absolute scale."
+  resident_weight:
+    value: 0.5
+    range: [0.2, 0.8]
+    source: "assumed"
+    star: true
+    note: "A resident's daily konbini propensity relative to a worker's. Sweep this ratio."
 
 # ----------------------------------------------------------------------------
 # 3. NETWORK / DRIVE-TIME  (Phase 2)

@@ -56,7 +56,6 @@ def plot_study_area(hoods, output_path=None, basemap=True):
     fig, ax = plt.subplots(figsize=(12, 12))
     g.plot(ax=ax, color=colors, alpha=0.55, edgecolor="white", linewidth=2.5)
 
-    # A small numbered badge sits inside each neighborhood.
     for _, row in g.iterrows():
         pt = row.geometry.representative_point()
         ax.annotate(str(row["num"]), (pt.x, pt.y), ha="center", va="center",
@@ -70,7 +69,6 @@ def plot_study_area(hoods, output_path=None, basemap=True):
         except Exception as e:
             print(f"(basemap skipped: {e})")
 
-    # Legend mapping number -> name, placed over the empty water at lower-left.
     handles = [mpatches.Patch(facecolor=colors[i], alpha=0.7, edgecolor="white",
                               label=f"{row['num']}.  {row['neighborhood']}")
                for i, row in g.iterrows()]
@@ -103,6 +101,50 @@ def plot_demand_by_neighborhood(ranked, output_path=None):
     ax.margins(x=0.13)                  # leave room for the value labels
     for spine in ("top", "right"):
         ax.spines[spine].set_visible(False)
+    fig.savefig(output_path)
+    plt.close(fig)
+    return output_path
+
+
+def plot_tract_assignment(tracts, hoods, output_path=None, basemap=True):
+    """Verification map: census tracts colored by their assigned neighborhood.
+
+    Black neighborhood outlines are drawn on top -- if the assignment is right,
+    each colored cluster of tracts sits neatly inside its outline.
+    """
+    import matplotlib.patches as mpatches
+
+    set_plot_style()
+    if output_path is None:
+        output_path = FIGURES_DIR / "tracts_assigned.png"
+
+    t = tracts.to_crs(3857)
+    h = hoods.to_crs(3857)
+
+    names = sorted(t["neighborhood"].unique())
+    cmap = plt.get_cmap("tab10")
+    color_for = {n: cmap(i) for i, n in enumerate(names)}
+
+    fig, ax = plt.subplots(figsize=(12, 12))
+    t.plot(ax=ax, color=t["neighborhood"].map(color_for), alpha=0.6,
+           edgecolor="white", linewidth=0.6)
+    h.boundary.plot(ax=ax, color="black", linewidth=2)   # outlines on top to check the tracts nest inside
+
+    if basemap:
+        try:
+            import contextily as cx
+            cx.add_basemap(ax, source=cx.providers.CartoDB.Positron)
+        except Exception as e:
+            print(f"(basemap skipped: {e})")
+
+    handles = [mpatches.Patch(facecolor=color_for[n], alpha=0.7, edgecolor="white", label=n)
+               for n in names]
+    ax.legend(handles=handles, loc="upper center", bbox_to_anchor=(0.5, -0.02),
+              ncol=2, fontsize=12, frameon=True, framealpha=0.95, borderpad=0.9,
+              title="Tract assigned to", title_fontsize=14)
+
+    ax.set_title("Census tracts assigned to neighborhoods", pad=14)
+    ax.axis("off")
     fig.savefig(output_path)
     plt.close(fig)
     return output_path

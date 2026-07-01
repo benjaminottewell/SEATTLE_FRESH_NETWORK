@@ -19,8 +19,7 @@ NEIGHBORHOODS_URL = ("https://raw.githubusercontent.com/seattleio/"
                      "seattle-boundaries-data/master/data/neighborhoods.geojson")
 CACHE_PATH = PROJECT_ROOT / "data" / "raw" / "seattle_neighborhoods.geojson"
 
-# Map the dataset's fine `name` value -> our study-area neighborhood name.
-# This is the transparent reconciliation between the city's names and ours.
+# The city's fine `name` values don't match our study names 1:1; reconcile them here.
 STUDY_AREA = {
     "Central Business District": "Downtown/CBD",
     "Belltown":                  "Belltown",

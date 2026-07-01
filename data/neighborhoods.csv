@@ -1,8 +1,8 @@
-neighborhood,daytime_population,source
-Downtown/CBD,90000,placeholder
-South Lake Union,45000,placeholder
-Capitol Hill,38000,placeholder
-First Hill,32000,placeholder
-Belltown,28000,placeholder
-Pioneer Square,16000,placeholder
-Chinatown-International District,14000,placeholder
+neighborhood,residents,worker_jobs,source
+Downtown/CBD,7352,77258,apportioned: ACS2024 residents + LODES2023 workers
+South Lake Union,11969,68348,apportioned: ACS2024 residents + LODES2023 workers
+Belltown,22586,56745,apportioned: ACS2024 residents + LODES2023 workers
+First Hill,11506,39907,apportioned: ACS2024 residents + LODES2023 workers
+Pioneer Square,2799,21757,apportioned: ACS2024 residents + LODES2023 workers
+Capitol Hill,28988,14573,apportioned: ACS2024 residents + LODES2023 workers
+Chinatown-International District,3938,4628,apportioned: ACS2024 residents + LODES2023 workers

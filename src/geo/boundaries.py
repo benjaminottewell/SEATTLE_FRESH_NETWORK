@@ -40,10 +40,8 @@ def fetch_tract_boundaries(year=TIGER_YEAR, use_cache=True):
         r.raise_for_status()
         zip_path.write_bytes(r.content)
 
-    # geopandas reads the shapefile straight out of the zip.
-    gdf = gpd.read_file(zip_path)
+    gdf = gpd.read_file(zip_path)   # geopandas reads shapefiles straight from the zip
 
-    # Keep only King County, rename to our standard column names, drop the rest.
     king = gdf[gdf["COUNTYFP"] == COUNTY_FIPS].copy()
     king = king.rename(columns={"GEOID": "geoid", "NAMELSAD": "name"})
     return king[["geoid", "name", "geometry"]].reset_index(drop=True)
@@ -63,7 +61,7 @@ if __name__ == "__main__":
     print(f"\nGeoid match check: {overlap} of {len(tracts)} tract shapes have "
           f"population data (should be ~all).")
 
-    # Quick map so we can actually SEE the geography appear.
+    # quick map to eyeball the result
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt

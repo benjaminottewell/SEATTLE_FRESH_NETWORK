@@ -14,19 +14,13 @@ from pathlib import Path
 import os
 import yaml
 
-# Figure out where assumptions.yaml lives, no matter where this code is run from.
-# __file__ is THIS file (src/config.py). .parent is src/. .parent.parent is the
-# project root -- the folder that contains assumptions.yaml.
+# Resolve paths from the repo root so imports work from any working directory.
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 ASSUMPTIONS_PATH = PROJECT_ROOT / "assumptions.yaml"
 
 
 def load_assumptions(path=ASSUMPTIONS_PATH):
-    """Open assumptions.yaml and return it as a nested Python dictionary.
-
-    A 'dictionary' is Python's labeled lookup: assumptions["demand"]["capture_rate"]
-    walks down the same structure you see in the YAML file.
-    """
+    """Read assumptions.yaml into a nested dict mirroring the file's structure."""
     with open(path, "r", encoding="utf-8") as f:
         return yaml.safe_load(f)
 
@@ -67,8 +61,6 @@ def get_census_key():
     return None
 
 
-# Running this file directly (python src/config.py) prints a quick sanity check,
-# so you can confirm the numbers are being read correctly.
 if __name__ == "__main__":
     a = load_assumptions()
     print("Loaded assumptions.yaml OK. A few values:")

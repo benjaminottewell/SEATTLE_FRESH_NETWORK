@@ -17,34 +17,43 @@ def estimate_daily_demand(catchment_population, assumptions):
     return daily_demand
 
 
-def estimate_area_demand(neighborhoods, assumptions):
-    """Run the single-store model across every neighborhood in a table.
+def effective_catchment(workers, residents, assumptions):
+    """Weighted 'people present' for a neighborhood -- a worker counts more than a resident.
 
-    `neighborhoods` is a pandas DataFrame (a spreadsheet-in-code) that has a
-    'daytime_population' column. We loop over each row, reuse your
-    estimate_daily_demand(), attach the answer as a new 'daily_demand' column,
-    then sort so the highest-demand neighborhood is on top.
+    catchment = worker_weight * workers + resident_weight * residents
     """
-    demands = []
-    for population in neighborhoods["daytime_population"]:
-        demands.append(estimate_daily_demand(population, assumptions))
+    worker_weight = get_value(assumptions, "demand", "worker_weight")
+    resident_weight = get_value(assumptions, "demand", "resident_weight")
+    return workers * worker_weight + residents * resident_weight
 
+
+def estimate_area_demand(neighborhoods, assumptions):
+    """Estimate daily demand for every neighborhood in the table.
+
+    `neighborhoods` is a DataFrame with the real 'worker_jobs' and 'residents'
+    columns. For each row we blend those into a weighted catchment, reuse
+    estimate_daily_demand(), then rank neighborhoods by demand.
+    """
     result = neighborhoods.copy()
-    result["daily_demand"] = demands
+    result["catchment"] = [effective_catchment(w, r, assumptions)
+                           for w, r in zip(result["worker_jobs"], result["residents"])]
+    result["daily_demand"] = [estimate_daily_demand(c, assumptions) for c in result["catchment"]]
     return result.sort_values("daily_demand", ascending=False).reset_index(drop=True)
 
 
 if __name__ == "__main__":
     a = load_assumptions()
 
-    # Load the neighborhood table (placeholder daytime populations for now).
+    # Load the neighborhood table (real apportioned census numbers).
     csv_path = PROJECT_ROOT / "data" / "neighborhoods.csv"
     neighborhoods = pd.read_csv(csv_path)
 
     ranked = estimate_area_demand(neighborhoods, a)
 
-    print("Estimated daily demand by neighborhood (PLACEHOLDER populations):\n")
-    print(ranked[["neighborhood", "daytime_population", "daily_demand"]].to_string(index=False))
+    print("Estimated daily demand by neighborhood (real census data):\n")
+    show = ranked[["neighborhood", "worker_jobs", "residents", "catchment", "daily_demand"]].copy()
+    show[["catchment", "daily_demand"]] = show[["catchment", "daily_demand"]].round(0)
+    print(show.to_string(index=False))
 
     total = ranked["daily_demand"].sum()
     print(f"\nWhole study area: ${total:,.0f} per day across {len(ranked)} neighborhoods")

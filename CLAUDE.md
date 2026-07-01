@@ -1,10 +1,22 @@
 # CLAUDE.md — Standing context for Claude Code
 
 ## What this project is
-A logistics/operations **feasibility model**: could a Japanese-konbini-style fresh-
+A logistics/operations **feasibility model**: could a Japanese-konbini-**inspired** fresh-
 convenience network work in Seattle? We model the full chain — demand → store siting →
 delivery routing → unit economics — for one bounded geography and produce a feasibility
 verdict with sensitivity analysis.
+
+**The node being tested:** a konbini-inspired **fresh-convenience micro-store** — small,
+multi-SKU, short-shelf-life fresh goods, replenished by multi-daily delivery. It is
+**low-labor by design**; the *degree of automation* is the model's central lever, expressed
+in Phase-5 economics as **store labor hours (down) vs. automation capex (up)** — feasible
+only if labor saved > capex/tech added. NOT a single-product vending kiosk (too narrow for
+the fresh-delivery logistics), and NOT assumed to be a fully-staffed store (that model just
+failed — see Foxtrot). Amazon Go is a **cautionary reference**: it automated *checkout* only,
+kept restocking/prep labor, and used expensive cashierless tech — its shutdown is one failed
+design point, not proof the concept can't work. Konbini = the inspiration + logistics
+blueprint; automation = Seattle's answer to its labor wall; the model finds the tipping
+conditions. An honest "infeasible unless X" is a valid result.
 
 **v1.0 scope:** the dense northern core (Downtown, Belltown, South Lake Union, Capitol
 Hill, First Hill, Pioneer Square, Chinatown-International District), with a fixed
@@ -43,4 +55,4 @@ labor/geography economics. Siting uses **MCLP** (maximal covering, fixed p) — 
 - **Phase 0 — Setup:** IN PROGRESS. Folder structure, skeleton files, assumptions.yaml
   created. Next: build the Python environment and verify the geo/optimization libraries
   install on this machine.
-- Phases 1–6: not started. See `KONBINI_SEATTLE_PLAN.md` for the full phased build.
+- Phases 1–6: not started. See `SEATTLE_PLAN.md` for the full phased build.

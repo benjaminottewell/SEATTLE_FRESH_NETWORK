@@ -43,7 +43,8 @@ Demand → store siting (MCLP) → delivery routing (VRPTW) → unit economics +
 
 ## 8. Honest limitations
 Assumption-driven. The load-bearing assumptions and their sources live in
-[`assumptions.yaml`](assumptions.yaml).
+[`assumptions.yaml`](assumptions.yaml); every external dataset and published benchmark,
+with links, is recorded in [`SOURCES.md`](SOURCES.md).
 
 ## 9. Reproducing this
 *(env + run instructions — finalized once the environment is locked)*
@@ -57,5 +58,5 @@ pip install -r requirements.txt
 
 ---
 
-*Full build spec: [`KONBINI_SEATTLE_PLAN.md`](KONBINI_SEATTLE_PLAN.md). Standing context for
+*Full build spec: [`SEATTLE_PLAN.md`](SEATTLE_PLAN.md). Standing context for
 contributors/Claude Code: [`CLAUDE.md`](CLAUDE.md).*

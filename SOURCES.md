@@ -1,8 +1,9 @@
 # Sources & References
 
 Every external dataset and published benchmark this project relies on, with links.
-This file backs the `source: cited` flags in [`assumptions.yaml`](assumptions.yaml) and
-the data-pipeline modules in [`src/`](src/). Last reviewed: **2026-06-30**.
+This file backs the `source: cited|derived` flags in [`assumptions.yaml`](assumptions.yaml)
+and the data-pipeline modules in [`src/`](src/). Last reviewed: **2026-07-01** (all URLs
+verified resolving on this date).
 
 ---
 
@@ -54,20 +55,34 @@ the data-pipeline modules in [`src/`](src/). Last reviewed: **2026-06-30**.
 
 ## 2. Assumption benchmarks (parameter grounding)
 
-### `capture_rate` = 0.025 (range 0.01–0.05) ⭐
+### `capture_rate` = 0.025 (range 0.01–0.05) ⭐ — flag: **derived**
 Fraction of the daytime catchment that transacts per day — the model's most uncertain input,
-which is why the swept range is deliberately wide.
+which is why the swept range is deliberately wide. No published number exists for this exact
+format, so it is **derived** from cited transaction volumes and our own computed densities
+(not flagged `cited` — that would overclaim).
 
-**Robust anchors (current, broad):**
-- **U.S. convenience in-store traffic (NACS 2023)** — industry-standard, large sample
-  (basket + volume below).
-- **Busy urban cafés** (e.g., Starbucks) — ~500–600 transactions/day is typical for a
-  high-traffic location; a good grab-and-go foot-traffic proxy.
-- **Japanese 7-Eleven** — the ceiling: ~¥664k/day sales (~$4,200/day) ⇒ ~950 customers/day.
-  https://www.statista.com/topics/8484/convenience-stores-in-japan/
+**Cited numerators (store transaction volumes):**
+- **U.S. convenience average (NACS 2023):** 1,491 transactions/day *including fuel pump*
+  (45,312/month) — in-store-only volume is lower.
+  https://www.cspdailynews.com/company-news/us-convenience-store-sales-reach-new-highs ·
+  https://www.convenience.org/stay-current/news/2024/april/4/1-us-c-store-sales-hit-860-billion_research
+- **Japanese 7-Eleven (the ceiling analog):** ~¥664k/day sales ⇒ ~950 customers/day at the
+  ~¥700 (~$4–5) konbini basket. https://www.statista.com/topics/8484/convenience-stores-in-japan/
 
-**Derivation:** ~500–600 txns/day ÷ a ~15–25k dense-core walk catchment ⇒ ~2–3% daily
-capture; range brackets conservative U.S. adoption (~1%) to konbini-like penetration (~5%).
+**Computed denominator (people per 400m walkshed, from our own apportioned data —
+reproducible from `src/geo/assign.py` + neighborhood polygon areas):**
+
+| Neighborhood | Catchment ÷ area ⇒ per 400m walkshed |
+|---|---|
+| Downtown/CBD | ~46,000 |
+| First Hill / SLU / Belltown | ~25,000 |
+| Pioneer Square | ~11,000 |
+| Chinatown-ID / Capitol Hill | ~5,000–6,000 |
+
+**Derivation:** a 550–950 txn/day store against those walksheds implies daily capture of
+~1.2% (CBD, dense) up to ~5% (lighter districts / konbini-like penetration). Range
+**[0.01, 0.05]**, midpoint **0.025**. Interpreted as network penetration of *covered*
+catchment — Phase 3 siting counts only demand within store coverage radii.
 
 > ⚠️ An earlier draft anchored on **Amazon Go** (~550 txns/day). That figure is a 2018–19
 > hype-era analyst estimate, and the concept is now being wound down — so it is used only as
@@ -95,15 +110,18 @@ and likely *conditional*, not an obvious yes. Excellent README "why this questio
 material.
 
 ### `avg_ticket` = $7.80 (range $5–$10)
-- **U.S. convenience average basket, 2023 = $7.80** (also ~1,491 transactions/day incl.
-  fuel-pump), per NACS State of the Industry.
+- **U.S. convenience average in-store basket, 2023 = $7.80** (up 3.7% year-over-year), per
+  NACS State of the Industry data. Of $859.8B total 2023 industry sales, $327.6B were
+  in-store.
   https://www.cspdailynews.com/company-news/us-convenience-store-sales-reach-new-highs ·
   https://www.convenience.org/stay-current/news/2024/april/4/1-us-c-store-sales-hit-860-billion_research
 
-### `labor_wage_per_hour` ⭐ — TO VERIFY
-- Flagged `cited` in `assumptions.yaml` but the exact current Seattle minimum wage still
-  needs a confirmed official figure + link (City of Seattle Office of Labor Standards).
-  **Open item.**
+### `labor_wage_per_hour` = $21.30 ⭐
+- **Seattle minimum wage effective 2026-01-01: $21.30/hour** (up from $20.76 in 2025),
+  applying to all employer sizes; indexed annually to CPI-W (2.61% for the period ending
+  Aug 2025). Source: City of Seattle Office of Labor Standards.
+  https://www.seattle.gov/laborstandards/ordinances/minimum-wage ·
+  https://www.seattle.gov/documents/Departments/LaborStandards/Memo_2026_Seattle_MW_Increase.pdf
 
 ---
 

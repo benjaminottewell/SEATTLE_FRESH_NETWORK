@@ -25,7 +25,8 @@ expansion (Ballard, Eastside) is documented future work, not built.
 
 ## The prime directive: this is a MODELING project
 - **Assumption transparency is the rigor.** Every operational/cost parameter lives in
-  `assumptions.yaml`, each with a `source: cited|assumed` flag and a note. Never hardcode a
+  `assumptions.yaml`, each with a `source: cited|derived|assumed` flag and a note
+  (`derived` = computed from cited inputs plus stated assumptions). Never hardcode a
   tunable number in `src/` — read it from `assumptions.yaml`.
 - **Always do sensitivity analysis.** The valuable output is "feasible if X < threshold,"
   not a bare yes/no. Parameters flagged `star: true` are the ones we sweep.

@@ -43,17 +43,19 @@ demand:
   capture_rate:
     value: 0.025         # fraction of daytime catchment that transacts per day
     range: [0.01, 0.05]  # swept in sensitivity analysis
-    source: "cited"
+    source: "derived"    # cited transaction volumes / assumed applicability; derivation in SOURCES.md
     star: true           # THE headline sensitivity parameter
     note: >
       Fraction of daytime catchment that transacts per day -- the model's most uncertain
-      input, hence the wide swept range. Anchored on current, broad grab-and-go benchmarks:
-      US convenience in-store traffic (NACS 2023) and busy urban cafes (~500-600 txns/day)
-      imply ~2-3% capture against a ~15-25k dense-core walk catchment; Japanese 7-Eleven
-      (~950 customers/day) is the ceiling. CAUTION: US konbini-style ventures have struggled
-      commercially -- Amazon Go is being wound down (all stores closing ~early 2026) and
-      Foxtrot went bankrupt (2024) -- mostly on cost/economics not demand, but it argues for
-      weighting the low end of the range. Full citations in SOURCES.md.
+      input, hence the wide swept range. Derived, not directly published: cited store
+      transaction volumes (US c-store avg 1,491/day incl. fuel per NACS 2023; Japanese
+      7-Eleven ~950 customers/day as the ceiling) divided by our own computed walkshed
+      populations (~46k per 400m walkshed in the CBD, ~25k in SLU/Belltown/First Hill,
+      ~5-11k elsewhere) imply ~1-5% capture; midpoint 2.5%. Interpreted as network
+      penetration of COVERED catchment -- Phase 3 siting counts only demand within store
+      coverage radii. US konbini-style ventures (Amazon Go wind-down, Foxtrot bankruptcy)
+      struggled commercially, arguing for weight on the low end. Full derivation +
+      citations in SOURCES.md.
   visit_frequency:
     value: 1.0           # visits per capturing customer per day
     source: "assumed"
@@ -137,11 +139,14 @@ economics:
     source: "assumed"
     note: "PLACEHOLDER. Small core retail slot."
   labor_wage_per_hour:
-    value: 20.76
-    range: [18.0, 26.0]
+    value: 21.30
+    range: [19.0, 26.0]
     source: "cited"
     star: true
-    note: "Seattle minimum wage. CITE official 2025/2026 rate; confirm current figure."
+    note: >
+      Seattle minimum wage effective 2026-01-01, per the Office of Labor Standards
+      (2025 rate was $20.76; ordinance indexes annually to CPI-W). Applies to all
+      employer sizes. Link in SOURCES.md.
   staff_hours_per_day:
     value: 32            # e.g. ~2 staff x 16 open-hours
     source: "assumed"

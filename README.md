@@ -20,9 +20,10 @@ assumptions and sensitivity analysis.
 
 The catch is economics. Japan's model leans on cheap, dense labor; Seattle's minimum wage is
 among the highest in the U.S., and the closest American attempts have struggled — **Amazon Go
-is being wound down and Foxtrot went bankrupt in 2024**, both on cost, not demand. So the node
-I model is a **low-labor, largely automated fresh-convenience micro-store**, and *how automated
-it has to be* is the lever the whole study turns on.
+is being wound down and Foxtrot went bankrupt in 2024**, failures that industry coverage
+attributes largely to cost structure and pricing rather than to a proven absence of demand.
+So the node I model is a **low-labor, largely automated fresh-convenience micro-store**, and
+*how automated it has to be* is the lever the whole study turns on.
 
 The question is live in industry too: 7-Eleven has announced ~1,300 konbini-style North
 American stores by 2030, with multi-daily fresh-delivery logistics flagged as the central

@@ -1,17 +1,32 @@
 # Can Seattle Support a Japan-Style Fresh-Convenience Network?
 
-> **Status: 🚧 in development (Phase 0 — setup).** This README is a skeleton; sections
-> fill in as each phase completes.
+> **Status: 🚧 in development — Phase 1 (demand) complete on real Seattle data; Phase 2
+> (drive-times) next.** This README fills in as each phase completes.
 
-A logistics and operations **feasibility study**: what would it take — logistically and
-economically — to run a Japanese-konbini-style fresh-convenience network in Seattle, and
-where does it become viable? This is a **modeling project**: the deliverable is a
-defensible verdict with transparent, sourced assumptions and sensitivity analysis.
+## Why I built this
+Right after graduating I moved out of my apartment and, three days later, was on a plane to
+Japan — seventeen days across Tokyo, Kyoto, Hiroshima, and Okinawa. The thing I couldn't stop
+thinking about on the flight home wasn't a temple or a view. It was the **convenience stores
+and vending machines**: how something that casual could deliver quality I'd have expected from
+a sit-down restaurant. Seattle is a dense city like the ones I'd just walked through — so I
+wanted to actually *know*: could that model work here? This project is me answering that the
+honest way, by building a model instead of guessing.
 
-The question is live — 7-Eleven has announced plans for ~1,300 konbini-style stores across
-North America by 2030, with multi-daily fresh-delivery logistics flagged as the central
-obstacle. This repo is an independent decision-support analysis of that problem for one
-city.
+## What it is
+A logistics and operations **feasibility study** of a konbini-inspired **fresh-convenience
+network** in Seattle's dense core — the full chain from demand → store siting → delivery
+routing → unit economics, ending in a **defensible verdict** with transparent, sourced
+assumptions and sensitivity analysis.
+
+The catch is economics. Japan's model leans on cheap, dense labor; Seattle's minimum wage is
+among the highest in the U.S., and the closest American attempts have struggled — **Amazon Go
+is being wound down and Foxtrot went bankrupt in 2024**, both on cost, not demand. So the node
+I model is a **low-labor, largely automated fresh-convenience micro-store**, and *how automated
+it has to be* is the lever the whole study turns on.
+
+The question is live in industry too: 7-Eleven has announced ~1,300 konbini-style North
+American stores by 2030, with multi-daily fresh-delivery logistics flagged as the central
+obstacle. This repo is an independent decision-support analysis of that problem for one city.
 
 ---
 
@@ -19,7 +34,9 @@ city.
 *(coming in Phase 6 — the optimized network map or the feasibility-tipping chart)*
 
 ## 2. The question
-Could a konbini-style fresh-convenience network work in Seattle's dense northern core?
+Could a dense network of konbini-inspired, **low-labor automated fresh-convenience
+micro-stores** pencil out in Seattle's core — and how much automation and store density does
+it take to flip it from infeasible to feasible?
 
 ## 3. The konbini system being modeled
 Four structural features: **area dominance** (tight clustering), **combined distribution

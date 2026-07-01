@@ -10,6 +10,7 @@ venv/
 env/
 
 # --- Data caches (NEVER commit large raw pulls; keep folders via .gitkeep) ---
+cache/
 data/raw/*
 data/interim/*
 data/processed/*

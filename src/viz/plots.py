@@ -148,3 +148,42 @@ def plot_tract_assignment(tracts, hoods, output_path=None, basemap=True):
     fig.savefig(output_path)
     plt.close(fig)
     return output_path
+
+
+def plot_hub_routes(G, routes, hub_latlon, output_path=None):
+    """Map of fastest delivery routes from the SoDo hub to each neighborhood.
+
+    `routes` is a dict {neighborhood: node list} from hub_drive_times(). The
+    street grid is drawn light gray as its own context (no basemap needed);
+    each route gets a color, the hub a black star.
+    """
+    import osmnx as ox
+    import matplotlib.lines as mlines
+
+    set_plot_style()
+    if output_path is None:
+        output_path = FIGURES_DIR / "hub_routes.png"
+
+    fig, ax = ox.plot_graph(G, show=False, close=False, figsize=(12, 12),
+                            bgcolor="white", node_size=0,
+                            edge_color="#d9d9d9", edge_linewidth=0.4)
+
+    cmap = plt.get_cmap("tab10")
+    handles = []
+    for i, (name, route) in enumerate(routes.items()):
+        edges = ox.routing.route_to_gdf(G, route)
+        edges.plot(ax=ax, color=cmap(i), linewidth=3, alpha=0.85, zorder=3)
+        handles.append(mlines.Line2D([], [], color=cmap(i), linewidth=3, label=name))
+
+    hub_lat, hub_lon = hub_latlon
+    ax.scatter([hub_lon], [hub_lat], s=350, marker="*", color="black", zorder=5)
+    handles.append(mlines.Line2D([], [], color="black", marker="*", linestyle="",
+                                 markersize=16, label="SoDo production hub"))
+
+    ax.legend(handles=handles, loc="upper center", bbox_to_anchor=(0.5, -0.02),
+              ncol=2, fontsize=12, frameon=True, framealpha=0.95, borderpad=0.9,
+              title="Fastest route to", title_fontsize=14)
+    ax.set_title("Fresh-delivery routes from the SoDo hub", pad=14)
+    fig.savefig(output_path)
+    plt.close(fig)
+    return output_path

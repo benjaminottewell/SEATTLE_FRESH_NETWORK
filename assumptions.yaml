@@ -34,6 +34,10 @@ study_area:
     value: "SoDo industrial district"
     source: "assumed"
     note: "Industrial zoning, port proximity, freeway access. Fixed-hub framing (Phase 3)."
+  production_hub_coords:
+    value: [47.5789, -122.3345]   # lat, lon -- near 1st Ave S & S Lander St
+    source: "assumed"
+    note: "Representative SoDo location on the industrial arterial grid; exact parcel is a what-if, not a finding."
 
 # ----------------------------------------------------------------------------
 # 2. DEMAND  (Phase 1)   --  the most uncertain layer
@@ -87,10 +91,15 @@ network:
     value: 30
     source: "assumed"
     note: "PLACEHOLDER. Max drive-time hub->store for short-shelf-life items."
-  avg_speed_kmh:
-    value: 25
+  congestion_factor:
+    value: 1.4
+    range: [1.2, 1.8]
     source: "assumed"
-    note: "PLACEHOLDER. Urban core average incl. traffic; refine from OSM speed tags."
+    star: true
+    note: >
+      Multiplier on OSM free-flow travel times to approximate urban daytime traffic.
+      Free-flow assumes empty streets; downtown midday driving is materially slower.
+      Directly stresses the multi-daily delivery window, so it is swept in sensitivity.
 
 # ----------------------------------------------------------------------------
 # 4. FACILITY LOCATION  (Phase 3)  --  Maximal Covering Location Problem

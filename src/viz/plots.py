@@ -143,7 +143,7 @@ def plot_tract_assignment(tracts, hoods, output_path=None, basemap=True):
               ncol=2, fontsize=12, frameon=True, framealpha=0.95, borderpad=0.9,
               title="Tract assigned to", title_fontsize=14)
 
-    ax.set_title("Census tracts assigned to neighborhoods", pad=14)
+    ax.set_title("Centroid-method diagnostic — gaps show why we apportion by area", pad=14)
     ax.axis("off")
     fig.savefig(output_path)
     plt.close(fig)

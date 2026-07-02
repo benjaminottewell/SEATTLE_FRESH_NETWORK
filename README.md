@@ -1,9 +1,23 @@
 # Can Seattle Support a Japan-Style Fresh-Convenience Network?
 
-> **Status: 🚧 in development — Phase 1 (demand) complete on real Seattle data; Phase 2
-> (drive-times) next.** This README fills in as each phase completes.
+**A logistics + operations feasibility model** — demand → store siting → delivery routing →
+unit economics — for a konbini-inspired network of **low-labor automated fresh-convenience
+micro-stores** in Seattle's dense core. Built on real census, jobs, and street-network data,
+with every assumption flagged and the load-bearing ones swept.
+
+> **Verdict: conditionally feasible.** The condition is demand — the median store turns
+> fully-loaded positive above a **~1.7% daily capture rate** of its walkshed population.
+> Automation is the margin-maker at Seattle wages: cutting on-site labor from a staffed
+> model (32 h/day) to an automated one (6 h/day) is worth **~$554 per store-day**, moving
+> the required capture from ~2.6% down to ~1.7%. Below ~1.5% capture, nothing works —
+> no labor model rescues absent demand.
+
+![The verdict vs. the star parameter](docs/figures/sensitivity_capture.png)
+
+---
 
 ## Why I built this
+
 Right after graduating I moved out of my apartment and, three days later, was on a plane to
 Japan — seventeen days across Tokyo, Kyoto, Hiroshima, and Okinawa. The thing I couldn't stop
 thinking about on the flight home wasn't a temple or a view. It was the **convenience stores
@@ -12,69 +26,119 @@ a sit-down restaurant. Seattle is a dense city like the ones I'd just walked thr
 wanted to actually *know*: could that model work here? This project is me answering that the
 honest way, by building a model instead of guessing.
 
-## What it is
-A logistics and operations **feasibility study** of a konbini-inspired **fresh-convenience
-network** in Seattle's dense core — the full chain from demand → store siting → delivery
-routing → unit economics, ending in a **defensible verdict** with transparent, sourced
-assumptions and sensitivity analysis.
+## The question
 
-The catch is economics. Japan's model leans on cheap, dense labor; Seattle's minimum wage is
-among the highest in the U.S., and the closest American attempts have struggled — **Amazon Go
-is being wound down and Foxtrot went bankrupt in 2024**, failures that industry coverage
-attributes largely to cost structure and pricing rather than to a proven absence of demand.
-So the node I model is a **low-labor, largely automated fresh-convenience micro-store**, and
-*how automated it has to be* is the lever the whole study turns on.
+Japanese konbini run a fresh-food system American convenience stores don't attempt: dense
+store clusters, nearby commissaries, and 2–3 temperature-controlled deliveries per day on
+short-shelf-life items. The question is live — 7-Eleven has announced ~1,300 konbini-style
+North American stores by 2030, with exactly this logistics flagged as the obstacle.
 
-The question is live in industry too: 7-Eleven has announced ~1,300 konbini-style North
-American stores by 2030, with multi-daily fresh-delivery logistics flagged as the central
-obstacle. This repo is an independent decision-support analysis of that problem for one city.
+The catch is economics. Japan's model leans on affordable, dense labor; Seattle's minimum
+wage ($21.30, 2026) is among the highest in the U.S., and the closest American attempts have
+struggled — **Amazon Go is being wound down and Foxtrot went bankrupt in 2024**, failures
+that industry coverage attributes largely to cost structure rather than to a proven absence
+of demand. So the node modeled here is a **low-labor, largely automated fresh micro-store**,
+and *how automated it has to be* is the lever the study turns on. (Amazon Go is the
+cautionary reference: it automated *checkout* only, kept restocking/prep labor, and paid for
+expensive sensor tech — one failed design point, not proof the concept can't work.)
 
----
+## The konbini system being modeled
 
-## 1. Hook + lead map
-*(coming in Phase 6 — the optimized network map or the feasibility-tipping chart)*
+| Structural feature | Maps to |
+|---|---|
+| Area dominance (tight clustering) | Facility location / density |
+| Combined distribution centers | Fixed SoDo commissary hub |
+| Multiple daily fresh deliveries (2–3×/day) | Routing + cadence cost |
+| JIT small-batch POS-driven ordering | Demand layer (future: sensing) |
 
-## 2. The question
-Could a dense network of konbini-inspired, **low-labor automated fresh-convenience
-micro-stores** pencil out in Seattle's core — and how much automation and store density does
-it take to flip it from infeasible to feasible?
+## Related work
 
-## 3. The konbini system being modeled
-Four structural features: **area dominance** (tight clustering), **combined distribution
-centers** (commissaries batching fresh food by temperature), **multiple daily fresh
-deliveries** (2–3×/day on short-shelf-life items), and **JIT POS-driven ordering**.
+The methods are deliberately established: set-covering / maximal-covering facility location
+and multi-depot capacitated VRP with time windows are mature techniques, and the closest
+template is a U.S. food-desert study combining set-covering with MDCVRP-TW across three
+counties. This project adapts that location-routing structure to a different application —
+konbini multi-daily fresh cadence, area-dominance density, and Seattle's specific
+labor/geography economics. Siting uses **MCLP** (maximal covering with fixed p, per Church &
+ReVelle) rather than set-covering, because capital — not coverage — is the binding
+constraint in a commercial rollout. The location-routing chicken-and-egg is resolved by the
+**fixed-hub decomposition**: the SoDo commissary is a settled input, not a decision
+variable.
 
-## 4. Related work
-Builds on established location-routing methods (set-covering + multi-depot capacitated
-VRP with time windows), adapting a U.S. food-desert grocery-hub framework to the konbini
-fresh-convenience case. *(expand in Phase 6)*
+## Approach and results, phase by phase
 
-## 5. Approach
-Demand → store siting (MCLP) → delivery routing (VRPTW) → unit economics + sensitivity.
-*(expand as phases complete)*
+**1 — Demand.** Weighted daytime catchment per neighborhood (`workers + 0.5×residents`),
+built from ACS 2024 residents + LODES 2023 workplace jobs, area-apportioned from census
+tracts to 7 neighborhoods. Worker-weighting is decisive: Capitol Hill is #1 by residents
+but #5 by demand; the CBD (7k residents, 77k jobs) dominates.
 
-## 6. The verdict
-*(coming in Phase 5)*
+**2 — Network.** OSMnx drive graph (2,251 intersections), per-edge speeds from OSM tags,
+×1.4 congestion factor. All 7 neighborhoods sit 3.9–9.8 congested minutes from the SoDo
+hub — ~3× headroom inside the 30-min fresh window. **Reach is not the constraint** in this
+land-contiguous core.
 
-## 7. What flips it
-*(sensitivity results — Phase 5)*
+**3 — Siting.** MCLP over 1,061 street-corner demand points (demand split from tract
+pieces; corners are both demand and candidate sites). Demand concentration is extreme —
+5 stores cover 65%, 10 cover 87%, 20 cover 99% — and marginal coverage collapses 16× from
+store #6 to store #20. The optimizer reproduces konbini area-dominance clustering
+unprompted.
 
-## 8. Honest limitations
-Assumption-driven. The load-bearing assumptions and their sources live in
-[`assumptions.yaml`](assumptions.yaml); every external dataset and published benchmark,
-with links, is recorded in [`SOURCES.md`](SOURCES.md).
+![Optimized store placement](docs/figures/store_sites.png)
+![Coverage vs number of stores](docs/figures/coverage_vs_p.png)
 
-## 9. Reproducing this
-*(env + run instructions — finalized once the environment is locked)*
+**4 — Routing.** OR-Tools VRP under van capacity + the fresh window. The **window binds,
+not capacity**: ~3 stops per van run → 4 vans for 10 stores → **$773/day ($77/store)**,
+fleet-dominated. (Freshness clock stops at the last handoff; the paid return leg doesn't
+age goods — that one semantic choice is worth a van.)
+
+**5 — Economics.** Per-store P&L against the **pre-registered bar** (contribution margin
+> 0, committed in `assumptions.yaml` before any results): 10/10 stores clear it at baseline
+(break-even: 88 txns/day). Fully loaded (rent + hub share + amortized capex): 9/10 positive.
+Then the star sweeps produce the verdict and the automation result:
+
+![The automation lever](docs/figures/sensitivity_automation.png)
+
+## What flips it
+
+| Lever | Tipping point |
+|---|---|
+| **Capture rate** (the star) | median store viable above **~1.7%** (automated) / ~2.6% (staffed); dead below ~1.5% |
+| **Automation** (6h vs 32h labor @ $21.30) | ≈ **$554/store-day** ≈ 0.9pp of capture slack |
+| **Store count p** | marginal store revenue falls 16× across p=6→20; viable network ≈ 9–12 stores at baseline |
+| Fresh window | binds the fleet (not capacity) — relaxing it shrinks vans; tightening it multiplies them |
+
+## Honest limitations
+
+Assumption-driven by design; the thresholds, not the point estimates, are the finding.
+Baseline is optimistic (top-store volumes at busy-konbini levels; flat $8k/mo rent on
+deliberately-optimal corners). Capture rate is **derived** (cited store volumes ÷ our
+computed walkshed populations), not measured — which is why it is the star sensitivity.
+Full list + the complete assumption table: [reports/findings.md](reports/findings.md).
+Every external data source and benchmark, with links: [SOURCES.md](SOURCES.md).
+
+## Reproducing this
 
 ```bash
-# (draft) create environment, install deps, run notebooks 01–05 in order
+git clone <this repo> && cd SEATTLE_FRESH_NETWORK
 python -m venv .venv
-# Windows:  .venv\Scripts\activate
-pip install -r requirements.txt
+.venv\Scripts\activate            # Windows
+pip install -r requirements.txt   # exact versions: requirements.lock.txt
+copy .env.example .env            # then paste your free Census API key into .env
+python run_all.py                 # full chain; first run pulls + caches external data
 ```
+
+Every tunable lives in [`assumptions.yaml`](assumptions.yaml) with a
+`cited | derived | assumed` flag — change a number, re-run, watch the verdict move.
+Figures land in `outputs/figures/`, tables in `outputs/tables/`.
+
+## Future work
+
+Cross-water expansion (Ballard / Eastside — where Seattle's water-fragmented geography
+actually bites), per-store rent surfaces, block-level demand, gravity-model catchments,
+joint location-routing, stochastic demand simulation, and consumer demand sensing as a
+richer input layer. Documented in [findings](reports/findings.md); deliberately not built —
+a finished small thing beats a half-built big one.
 
 ---
 
-*Full build spec: [`SEATTLE_PLAN.md`](SEATTLE_PLAN.md). Standing context for
-contributors/Claude Code: [`CLAUDE.md`](CLAUDE.md).*
+*Build spec: [`SEATTLE_PLAN.md`](SEATTLE_PLAN.md) · Data sources: [`SOURCES.md`](SOURCES.md) ·
+Full narrative: [`reports/findings.md`](reports/findings.md)*

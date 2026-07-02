@@ -128,6 +128,10 @@ Assumption-driven by design; the thresholds, not the point estimates, are the fi
 Baseline is optimistic (top-store volumes at busy-konbini levels; flat $8k/mo rent on
 deliberately-optimal corners). Capture rate is **derived** (cited store volumes ÷ our
 computed walkshed populations), not measured — which is why it is the star sensitivity.
+Theft and external shrink are not modeled: spoilage covers waste from unsold goods, not
+loss, and shrink is a real risk for a lightly staffed urban store. Demand is also
+steady-state from day one, with no ramp-up period or marketing cost, so early cash
+needs are understated.
 Full list + the complete assumption table: [reports/findings.md](reports/findings.md).
 Every external data source and benchmark, with links: [SOURCES.md](SOURCES.md).
 

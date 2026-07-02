@@ -24,7 +24,8 @@ from src.optimize.mclp import solve_mclp
 
 APP_DIR = Path(__file__).resolve().parent
 
-st.set_page_config(page_title="Seattle Fresh-Network Explorer", layout="wide")
+st.set_page_config(page_title="Seattle Fresh-Network Explorer", page_icon="🏪",
+                   layout="wide")
 
 
 @st.cache_data
@@ -70,13 +71,16 @@ def optimize(p, radius_m):
 
 # ---------------- sidebar ----------------
 st.sidebar.title("Levers")
+st.sidebar.subheader("Network design")
 p = st.sidebar.slider("Stores (p)", 5, 20, 10)
 radius = st.sidebar.slider("Walkshed radius (m)", 200, 600, 400, step=50)
-st.sidebar.caption("Changing the two above re-optimizes placement (a few seconds).")
+st.sidebar.caption("These two re-optimize store placement (a few seconds).")
+st.sidebar.subheader("Economics")
 capture = st.sidebar.slider("Capture rate (%)", 1.0, 5.0, 2.5, step=0.1) / 100
 ticket = st.sidebar.slider("Avg ticket ($)", 5.0, 10.0, 7.8, step=0.1)
 hours = st.sidebar.slider("On-site staff hours/day", 2, 32, 6)
 wage = st.sidebar.slider("Wage ($/hr)", 19.0, 26.0, 21.3, step=0.1)
+st.sidebar.caption("These re-price the placed network instantly — no re-solve.")
 
 pts, outlines, fx = load_inputs()
 with st.spinner(f"Optimizing {p} store placements..."):
@@ -92,13 +96,18 @@ stores["contribution"] = (stores["revenue"] * margin
                           - fx["delivery_share"] - hours * wage)
 stores["fully_loaded"] = (stores["contribution"] - fx["rent_day"]
                           - fx["hub_day"] / p - amort_day)
+# Capture rate at which a store's fully-loaded P&L crosses zero: the daily cost
+# stack over the gross margin one full point of capture would earn there.
+cost_stack = (fx["delivery_share"] + hours * wage + fx["rent_day"]
+              + fx["hub_day"] / p + amort_day)
+stores["breakeven_capture"] = cost_stack / (stores["catchment"] * ticket * margin)
 
 # ---------------- header + metrics ----------------
 st.title("Seattle Fresh-Network Explorer")
 st.caption("Exploratory companion to the v1.0 feasibility model — see the README for "
            "the defended analysis, sources, and the pre-registered feasibility bar.")
 
-c1, c2, c3, c4, c5 = st.columns(5)
+c1, c2, c3, c4, c5, c6 = st.columns(6)
 c1.metric("Catchment covered", f"{covered / total:.0%}",
           help="Share of the weighted daytime population (workers + 0.5×residents) "
                "within a walkshed of at least one store.")
@@ -114,8 +123,12 @@ c4.metric("Fully-loaded positive", f"{int((stores['fully_loaded'] > 0).sum())} o
 c5.metric("Median store, fully loaded", f"${stores['fully_loaded'].median():,.0f}/day",
           help="The middle store's daily profit with all costs in — the number the "
                "study's verdict thresholds are quoted on.")
+c6.metric("Median break-even capture", f"{stores['breakeven_capture'].median():.1%}",
+          help="Capture rate at which the median store's fully-loaded P&L crosses zero. "
+               "At default settings this reproduces the study's headline: ~1.7% at 6 "
+               "staffed hours; drag hours to 32 and it climbs to ~2.7%.")
 
-with st.expander("What do 'contribution' and 'fully loaded' mean?"):
+with st.expander("What do 'contribution', 'fully loaded', and 'break-even capture' mean?"):
     st.markdown(
         "Each store's daily P&L is computed two ways:\n\n"
         "1. **Contribution** *(the pre-registered feasibility bar)* — does the store "
@@ -123,6 +136,9 @@ with st.expander("What do 'contribution' and 'fully loaded' mean?"):
         "`revenue − product cost×(1+spoilage) − delivery share − staff hours×wage`\n\n"
         "2. **Fully loaded** *(the operator view)* — subtract the fixed stack too:\n"
         "`contribution − rent − hub-opex share (split across stores) − capex/7yr`\n\n"
+        "3. **Break-even capture** — the fully-loaded equation solved for the capture "
+        "rate that makes it zero: the share of its walkshed a store must win each day "
+        "to justify every cost it carries.\n\n"
         "A store can clear the contribution bar yet lose money fully loaded — that gap "
         "is exactly where the joint-pessimism stress case kills the network (see the "
         "README verdict and `reports/findings.md`).")
@@ -130,6 +146,9 @@ with st.expander("What do 'contribution' and 'fully loaded' mean?"):
 # ---------------- map ----------------
 stores["viable"] = stores["fully_loaded"] > 0
 stores["color"] = stores["viable"].map(lambda v: [22, 140, 60] if v else [193, 18, 31])
+stores["be_pct"] = (stores["breakeven_capture"] * 100).round(1)
+stores["catch_disp"] = stores["catchment"].round(0).astype(int)
+stores["fl_disp"] = stores["fully_loaded"].round(0).astype(int)
 demand = pts.copy()
 demand["r"] = np.clip(np.sqrt(demand["weight"]) * 2.2, 6, 55)
 
@@ -140,24 +159,38 @@ layers = [
               get_radius="r", get_fill_color=[74, 111, 165, 90]),
     pdk.Layer("ScatterplotLayer", stores, get_position="[lon, lat]",
               get_radius=radius, get_fill_color=[228, 87, 46, 35],
-              stroked=True, get_line_color=[228, 87, 46, 160], line_width_min_pixels=1),
+              stroked=True, get_line_color=[228, 87, 46, 160], line_width_min_pixels=1,
+              pickable=True),
     pdk.Layer("ScatterplotLayer", stores, get_position="[lon, lat]",
-              get_radius=28, get_fill_color="color", pickable=True),
+              get_radius=28, radius_min_pixels=8, get_fill_color="color",
+              stroked=True, get_line_color=[255, 255, 255], line_width_min_pixels=1.5,
+              pickable=True),
 ]
-tooltip = {"html": "<b>Store</b><br>catchment {catchment}<br>"
-                   "fully loaded $/day: {fully_loaded}"}
+tooltip = {"html": "<b>Store</b><br>catchment {catch_disp}<br>"
+                   "fully loaded $/day: {fl_disp}<br>"
+                   "break-even capture: {be_pct}%"}
 st.pydeck_chart(pdk.Deck(
     layers=layers, tooltip=tooltip,
     initial_view_state=pdk.ViewState(latitude=47.608, longitude=-122.332, zoom=12.2),
     map_style="light"))
 st.caption("Blue dots = demand at street corners (size = catchment). Circles = chosen "
-           "store walksheds. Store dots: green = fully-loaded positive, red = losing money.")
+           "store walksheds. Store dots: green = fully-loaded positive, red = losing money. "
+           "Hover a store dot, or anywhere inside its walkshed circle, for its stats.")
 
 # ---------------- per-store table ----------------
-show = stores[["txns_day", "revenue", "contribution", "fully_loaded"]].copy()
-show = show.sort_values("contribution", ascending=False).round(0).reset_index(drop=True)
+show = stores[["txns_day", "revenue", "contribution", "fully_loaded",
+               "breakeven_capture"]].copy()
+show["breakeven_capture"] = show["breakeven_capture"] * 100
+show = show.sort_values("contribution", ascending=False).reset_index(drop=True)
 show.index = [f"store {i + 1}" for i in show.index]
-st.dataframe(show, width="stretch")
+st.dataframe(show, width="stretch", column_config={
+    "txns_day": st.column_config.NumberColumn("Transactions / day", format="%.0f"),
+    "revenue": st.column_config.NumberColumn("Revenue ($/day)", format="$%.0f"),
+    "contribution": st.column_config.NumberColumn("Contribution ($/day)", format="$%.0f"),
+    "fully_loaded": st.column_config.NumberColumn("Fully loaded ($/day)", format="$%.0f"),
+    "breakeven_capture": st.column_config.NumberColumn("Break-even capture", format="%.2f%%"),
+})
 st.caption("Delivery share fixed at the Phase-4 baseline ($77/store-day; the fleet is "
            "freshness-window-bound, so it is ~insensitive to demand volume). Rent, hub "
-           "opex, and capex amortization from assumptions.yaml.")
+           "opex, and capex amortization from assumptions.yaml. A store is green on the "
+           "map exactly when its break-even capture sits below the capture slider.")

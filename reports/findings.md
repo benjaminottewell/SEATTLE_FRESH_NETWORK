@@ -117,6 +117,15 @@ sourced, derived, and swept rather than asserted.
   a per-store rent *surface* (prime corners cost more) remains the refinement.
 - **Capture rate is derived, not measured** (cited volumes ÷ our computed walkshed
   populations). It is the star sensitivity for exactly this reason.
+- **Theft and external shrink are not modeled.** The spoilage rate covers waste from
+  unsold fresh goods, not loss from theft. A store staffed for only a few hours a day in
+  downtown Seattle carries real shrink risk, and solving exactly this problem is part of
+  what made Amazon Go's technology so expensive. The low-staffing economics should be
+  read as a best case on this front.
+- **Demand is steady-state from day one.** Each store is priced at its settled capture
+  rate, with no ramp-up period, no marketing spend, and no habit-building phase. A real
+  launch would lose money for months while capture climbs toward its resting level, so
+  the model understates early cash needs even where the daily P&L clears the bar.
 - **Uniform dasymetric split** of tract population across street corners; LODES is
   block-level and would sharpen this.
 - **Delivery share held constant** across economic sweeps (defensible: the fleet is

@@ -125,7 +125,7 @@ and likely *conditional*.
 ### `deliveries_per_day` = 3 (range 1–4) ⭐
 - **7-Eleven Japan delivers fresh products to stores three times a day**, steered by POS
   data, from ~150 dedicated distribution centers/factories with supply chains separated
-  by temperature band (frozen / chilled / warm / ambient) — the defining konbini cadence
+  by temperature band (frozen / chilled / warm / ambient). This style of delivery cadence is what
   this project tests under Seattle economics.
   https://www.thetakeout.com/2155553/why-7-eleven-japan-success-wont-work-america/ ·
   https://globis.eu/what-makes-7-eleven-japan-unstoppable/

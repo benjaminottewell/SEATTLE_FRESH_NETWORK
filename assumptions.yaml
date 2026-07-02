@@ -165,9 +165,30 @@ economics:
       (2025 rate was $20.76; ordinance indexes annually to CPI-W). Applies to all
       employer sizes. Link in SOURCES.md.
   staff_hours_per_day:
-    value: 32            # e.g. ~2 staff x 16 open-hours
+    value: 6
+    range: [2, 32]
     source: "assumed"
-    note: "PLACEHOLDER."
+    star: true
+    note: >
+      THE AUTOMATION LEVER. Paid on-site hours per store-day: restock handoff,
+      cleaning, exceptions. 6h = the low-labor automated micro-store being tested;
+      32h (~2 staff x 16 open hours) = the fully-staffed reference (the model that
+      failed at Foxtrot). Swept across the full range to find where labor cost
+      flips the verdict.
+  automation_capex_per_store:
+    value: 150000
+    range: [50000, 400000]
+    source: "assumed"
+    star: true
+    note: >
+      Up-front automation + fit-out per store (self-checkout/vending hardware,
+      access control, cameras, refrigeration). The price paid to buy labor hours
+      down; amortized over capex_amortization_years. Amazon Go's mistake was the
+      top of this range with little labor actually removed.
+  capex_amortization_years:
+    value: 7
+    source: "assumed"
+    note: "Straight-line amortization horizon for store capex (typical retail fit-out life)."
   product_cost_ratio:
     value: 0.65          # COGS as fraction of revenue
     source: "assumed"

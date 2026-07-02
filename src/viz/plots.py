@@ -245,6 +245,71 @@ def plot_coverage_curve(curve, output_path=None):
     return output_path
 
 
+def plot_capture_sensitivity(cap, baseline, output_path=None):
+    """THE verdict chart: how many stores are viable as capture_rate varies."""
+    set_plot_style()
+    if output_path is None:
+        output_path = FIGURES_DIR / "sensitivity_capture.png"
+
+    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(11, 9), sharex=True,
+                                   height_ratios=[3, 2])
+    x = cap["capture_rate"] * 100
+
+    ax1.step(x, cap["stores_clearing_bar"], where="post", linewidth=2.5,
+             color=BAR_COLOR, label="Pre-registered bar (contribution > 0)")
+    ax1.step(x, cap["stores_fully_loaded_pos"], where="post", linewidth=2.5,
+             color="#e4572e", label="Fully loaded (rent + hub + capex)")
+    ax1.axvline(baseline * 100, color="gray", linestyle="--", linewidth=1.5)
+    ax1.annotate("baseline", (baseline * 100, ax1.get_ylim()[1] * 0.05),
+                 rotation=90, fontsize=11, color="gray", ha="right")
+    ax1.set_ylabel("Viable stores (of 10)")
+    ax1.set_title("The verdict vs. the star parameter: capture rate")
+    ax1.legend(loc="lower right", fontsize=12)
+
+    ax2.plot(x, cap["median_fully_loaded"], color="#e4572e", linewidth=2.5)
+    ax2.axhline(0, color="black", linewidth=1)
+    ax2.axvline(baseline * 100, color="gray", linestyle="--", linewidth=1.5)
+    ax2.set_xlabel("Capture rate (% of daytime catchment transacting per day)")
+    ax2.set_ylabel("Median store\nfully-loaded $/day")
+
+    for ax in (ax1, ax2):
+        for spine in ("top", "right"):
+            ax.spines[spine].set_visible(False)
+    fig.savefig(output_path)
+    plt.close(fig)
+    return output_path
+
+
+def plot_automation_sensitivity(hours, baseline_hours, output_path=None):
+    """The automation lever: viability vs on-site staff hours, by capture scenario."""
+    set_plot_style()
+    if output_path is None:
+        output_path = FIGURES_DIR / "sensitivity_automation.png"
+
+    fig, ax = plt.subplots(figsize=(11, 7))
+    colors = {c: col for c, col in zip(sorted(hours["capture_rate"].unique(), reverse=True),
+                                       [BAR_COLOR, "#e4572e"])}
+    for c, grp in hours.groupby("capture_rate"):
+        ax.plot(grp["staff_hours"], grp["median_fully_loaded"], linewidth=2.5,
+                color=colors[c], label=f"capture = {c:.1%}")
+    ax.axhline(0, color="black", linewidth=1)
+    ax.axvline(baseline_hours, color="gray", linestyle="--", linewidth=1.5)
+    ax.annotate("automated baseline", (baseline_hours, ax.get_ylim()[0] * 0.9),
+                rotation=90, fontsize=11, color="gray", ha="right", va="bottom")
+    ax.axvline(32, color="gray", linestyle=":", linewidth=1.5)
+    ax.annotate("fully staffed (Foxtrot model)", (32, ax.get_ylim()[0] * 0.9),
+                rotation=90, fontsize=11, color="gray", ha="right", va="bottom")
+    ax.set_xlabel("On-site staff hours per store-day")
+    ax.set_ylabel("Median store fully-loaded $/day")
+    ax.set_title("The automation lever: labor hours vs. viability")
+    ax.legend(fontsize=12)
+    for spine in ("top", "right"):
+        ax.spines[spine].set_visible(False)
+    fig.savefig(output_path)
+    plt.close(fig)
+    return output_path
+
+
 def plot_hub_routes(G, routes, hub_latlon, output_path=None):
     """Map of fastest delivery routes from the SoDo hub to each neighborhood.
 

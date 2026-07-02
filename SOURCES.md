@@ -122,6 +122,14 @@ and likely *conditional*.
   https://www.cspdailynews.com/company-news/us-convenience-store-sales-reach-new-highs ·
   https://www.convenience.org/stay-current/news/2024/april/4/1-us-c-store-sales-hit-860-billion_research
 
+### `deliveries_per_day` = 3 (range 1–4) ⭐
+- **7-Eleven Japan delivers fresh products to stores three times a day**, steered by POS
+  data, from ~150 dedicated distribution centers/factories with supply chains separated
+  by temperature band (frozen / chilled / warm / ambient) — the defining konbini cadence
+  this project tests under Seattle economics.
+  https://www.thetakeout.com/2155553/why-7-eleven-japan-success-wont-work-america/ ·
+  https://globis.eu/what-makes-7-eleven-japan-unstoppable/
+
 ### `labor_wage_per_hour` = $21.30 ⭐
 - **Seattle minimum wage effective 2026-01-01: $21.30/hour** (up from $20.76 in 2025),
   applying to all employer sizes; indexed annually to CPI-W (2.61% for the period ending

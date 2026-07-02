@@ -6,7 +6,7 @@
 #
 #     source: "cited"   -> backed by a published source (links in SOURCES.md)
 #     source: "derived" -> computed from cited inputs plus stated assumptions
-#     source: "assumed" -> our own estimate or a design choice (reasoning in `note`)
+#     source: "assumed" -> the author's estimate or a design choice (reasoning in `note`)
 #
 # The sensitivity analysis (Phase 5) sweeps the values flagged `star: true`.
 # ============================================================================
@@ -50,7 +50,7 @@ demand:
       Fraction of daytime catchment that transacts per day -- the model's most uncertain
       input, hence the wide swept range. Derived, not directly published: cited store
       transaction volumes (US c-store avg 1,491/day incl. fuel per NACS 2023; Japanese
-      7-Eleven ~950 customers/day as the ceiling) divided by our own computed walkshed
+      7-Eleven ~950 customers/day as the ceiling) divided by my computed walkshed
       populations (~46k per 400m walkshed in the CBD, ~25k in SLU/Belltown/First Hill,
       ~5-11k elsewhere) imply ~1-5% capture; midpoint 2.5%. Interpreted as network
       penetration of COVERED catchment -- Phase 3 siting counts only demand within store
@@ -125,7 +125,11 @@ routing:
     range: [1, 4]
     source: "cited"
     star: true
-    note: "Konbini multi-daily fresh cadence. CITE published 7-Eleven Japan benchmark."
+    note: >
+      7-Eleven Japan delivers fresh products to stores three times a day, steered by
+      POS data, from ~150 dedicated distribution centers with temperature-separated
+      supply chains -- the defining konbini cadence this project tests under Seattle
+      economics. Links in SOURCES.md.
   vehicle_capacity_units:
     value: 200
     source: "assumed"
@@ -183,9 +187,9 @@ economics:
     note: >
       THE AUTOMATION LEVER. Paid on-site hours per store-day: restock handoff,
       cleaning, exceptions. 6h = the low-labor automated micro-store being tested;
-      32h (~2 staff x 16 open hours) = the fully-staffed reference (the model that
-      failed at Foxtrot). Swept across the full range to find where labor cost
-      flips the verdict.
+      32h (~2 staff x 16 open hours) = the fully-staffed reference (the cost
+      structure that failed at Foxtrot). Swept across the full range to find where
+      labor cost flips the verdict.
   automation_capex_per_store:
     value: 150000
     range: [50000, 400000]
@@ -215,7 +219,7 @@ economics:
     note: >
       Assumed, but plausibility-checked against reality: Japanese konbini reportedly
       discard ~20,000-50,000 yen of food per store-day vs ~664,000 yen daily sales,
-      i.e. waste ~3-7.5% of sales value. Our 8% on COGS = 5.2% of revenue -- mid-band.
+      i.e. waste ~3-7.5% of sales value. My 8% on COGS = 5.2% of revenue -- mid-band.
       Swept 3-15%; unit margin moves 33.1% -> 25.3% across the sweep (break-even
       ~80 -> ~104 txns/day), so it stresses fringe stores only. See SOURCES.md.
   hub_opex_per_day:

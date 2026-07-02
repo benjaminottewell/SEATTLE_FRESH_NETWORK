@@ -41,6 +41,14 @@ def get_value(assumptions, *keys):
     return node["value"]
 
 
+def get_range(assumptions, *keys):
+    """Like get_value, but returns the parameter's swept 'range' field [lo, hi]."""
+    node = assumptions
+    for key in keys:
+        node = node[key]
+    return node["range"]
+
+
 def get_census_key():
     """Return your Census API key, or None if it isn't set up yet.
 

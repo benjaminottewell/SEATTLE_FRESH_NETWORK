@@ -204,6 +204,47 @@ def plot_store_sites(points, chosen_ids, hoods, radius_m, output_path=None, base
     return output_path
 
 
+def plot_coverage_curve(curve, output_path=None):
+    """Coverage vs store count, plus what each added store contributes.
+
+    Top: total coverage %% (the benefit curve Phase 5 prices out).
+    Bottom: marginal catchment per added store -- the diminishing-returns signal
+    that decides where extra stores stop paying for themselves.
+    """
+    set_plot_style()
+    if output_path is None:
+        output_path = FIGURES_DIR / "coverage_vs_p.png"
+
+    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(11, 9), sharex=True,
+                                   height_ratios=[3, 2])
+
+    ax1.plot(curve["p"], curve["coverage_pct"], marker="o", color=BAR_COLOR,
+             linewidth=2.5, markersize=7)
+    for _, r in curve.iterrows():
+        ax1.annotate(f"{r['coverage_pct']:.0f}%", (r["p"], r["coverage_pct"]),
+                     textcoords="offset points", xytext=(0, 10),
+                     ha="center", fontsize=10)
+    ax1.set_ylabel("Catchment covered (%)")
+    ax1.set_ylim(top=104)
+    ax1.set_title("Coverage vs. number of stores (MCLP sweep)")
+
+    marginal = curve.dropna(subset=["marginal_catchment"])   # undefined at the first p
+    ax2.bar(marginal["p"], marginal["marginal_catchment"], color="#e4572e", alpha=0.85)
+    ax2.bar_label(ax2.containers[0], labels=[f"{v:,.0f}" for v in marginal["marginal_catchment"]],
+                  padding=3, fontsize=10)
+    ax2.set_xlabel("Number of stores  (p)")
+    ax2.set_ylabel("Catchment added\nby store #p")
+    ax2.set_xticks(curve["p"])
+
+    for ax in (ax1, ax2):
+        for spine in ("top", "right"):
+            ax.spines[spine].set_visible(False)
+
+    fig.savefig(output_path)
+    plt.close(fig)
+    return output_path
+
+
 def plot_hub_routes(G, routes, hub_latlon, output_path=None):
     """Map of fastest delivery routes from the SoDo hub to each neighborhood.
 

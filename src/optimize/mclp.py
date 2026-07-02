@@ -16,11 +16,14 @@ from src.config import load_assumptions, get_value
 from src.optimize.prep import build_siting_inputs
 
 
-def solve_mclp(weights, reachable, p):
+def solve_mclp(weights, reachable, p, gap=None, time_limit=None):
     """Pick the p sites that cover the most catchment.
 
     weights   -- {point_id: catchment at that corner}
     reachable -- {point_id: candidate ids within coverage radius}
+    gap       -- optional relative optimality tolerance (e.g. 0.005 = stop within
+                 0.5%% of provably best; CBC finds good solutions fast but proving
+                 exact optimality is what takes minutes)
     Returns (chosen_site_ids, covered_catchment).
     """
     candidates = list(weights.keys())   # every corner is also a candidate site
@@ -37,7 +40,7 @@ def solve_mclp(weights, reachable, p):
         prob += covered[i] <= lpSum([open_site[j] for j in reachable[i]])  # 3) honesty: i only counts as covered
                                        #    if some open store can reach it
 
-    prob.solve(PULP_CBC_CMD(msg=0))
+    prob.solve(PULP_CBC_CMD(msg=0, gapRel=gap, timeLimit=time_limit))
 
     chosen = [j for j in candidates if value(open_site[j]) > 0.5]
     covered_catchment = sum(weights[i] for i in weights if value(covered[i]) > 0.5)

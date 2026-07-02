@@ -99,11 +99,33 @@ st.caption("Exploratory companion to the v1.0 feasibility model — see the READ
            "the defended analysis, sources, and the pre-registered feasibility bar.")
 
 c1, c2, c3, c4, c5 = st.columns(5)
-c1.metric("Catchment covered", f"{covered / total:.0%}")
-c2.metric("Network revenue", f"${stores['revenue'].sum():,.0f}/day")
-c3.metric("Stores with contribution > 0", f"{int((stores['contribution'] > 0).sum())} of {p}")
-c4.metric("Fully-loaded positive", f"{int((stores['fully_loaded'] > 0).sum())} of {p}")
-c5.metric("Median store, fully loaded", f"${stores['fully_loaded'].median():,.0f}/day")
+c1.metric("Catchment covered", f"{covered / total:.0%}",
+          help="Share of the weighted daytime population (workers + 0.5×residents) "
+               "within a walkshed of at least one store.")
+c2.metric("Network revenue", f"${stores['revenue'].sum():,.0f}/day",
+          help="Covered catchment × capture rate × average ticket, summed over stores.")
+c3.metric("Stores with contribution > 0", f"{int((stores['contribution'] > 0).sum())} of {p}",
+          help="Contribution = revenue − product cost (incl. spoilage) − delivery share "
+               "− on-site labor. The study's pre-registered feasibility bar.")
+c4.metric("Fully-loaded positive", f"{int((stores['fully_loaded'] > 0).sum())} of {p}",
+          help="Contribution minus the fixed stack: rent, the store's share of commissary "
+               "(hub) operating cost, and automation capex amortized over 7 years. "
+               "The 'all costs in' operator view.")
+c5.metric("Median store, fully loaded", f"${stores['fully_loaded'].median():,.0f}/day",
+          help="The middle store's daily profit with all costs in — the number the "
+               "study's verdict thresholds are quoted on.")
+
+with st.expander("What do 'contribution' and 'fully loaded' mean?"):
+    st.markdown(
+        "Each store's daily P&L is computed two ways:\n\n"
+        "1. **Contribution** *(the pre-registered feasibility bar)* — does the store "
+        "cover the costs that scale with running it?\n"
+        "`revenue − product cost×(1+spoilage) − delivery share − staff hours×wage`\n\n"
+        "2. **Fully loaded** *(the operator view)* — subtract the fixed stack too:\n"
+        "`contribution − rent − hub-opex share (split across stores) − capex/7yr`\n\n"
+        "A store can clear the contribution bar yet lose money fully loaded — that gap "
+        "is exactly where the joint-pessimism stress case kills the network (see the "
+        "README verdict and `reports/findings.md`).")
 
 # ---------------- map ----------------
 stores["viable"] = stores["fully_loaded"] > 0

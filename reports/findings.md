@@ -145,3 +145,11 @@ per-store rent surfaces; block-level dasymetric demand; distance-weighted gravit
 network-distance walksheds; joint location-routing (LRP) instead of the fixed-hub
 decomposition; stochastic demand + discrete-event simulation; time-of-day demand;
 consumer demand sensing as a richer input layer; notebook narrative.
+
+**Format generalization.** The pipeline is a general feasibility engine for
+hub-replenished walk-up node networks; the konbini micro-store is one parameter file.
+A single-product automated kiosk (premium drink machines and similar vending-first
+formats) is the natural second case: swap capex, labor (restock folds into the delivery
+stop), walkshed radius, ticket, and cadence in `assumptions.yaml` and re-run. Model
+prediction worth testing: at kiosk scale the binding constraint flips from the fresh
+window to machine capacity.

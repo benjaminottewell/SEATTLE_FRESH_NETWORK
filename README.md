@@ -138,6 +138,14 @@ joint location-routing, stochastic demand simulation, and consumer demand sensin
 richer input layer. Documented in [findings](reports/findings.md); deliberately not built —
 a finished small thing beats a half-built big one.
 
+**Re-parameterization to other node formats.** The chain is format-agnostic: any
+"many small nodes, replenished from a hub, serving walk-up demand" concept is a
+parameter swap in `assumptions.yaml`. The natural next case is a **single-product
+automated kiosk** (e.g., premium drink machines): tiny capex, near-zero labor
+(restocking merges into the delivery stop), a shorter impulse-purchase walkshed, and
+1–2×/day replenishment — where the model predicts the binding constraint flips from
+the freshness window to **machine capacity**, the mirror image of the store result.
+
 ---
 
 *Build spec: [`SEATTLE_PLAN.md`](SEATTLE_PLAN.md) · Data sources: [`SOURCES.md`](SOURCES.md) ·

@@ -5,6 +5,10 @@ unit economics — for a konbini-inspired network of **low-labor automated fresh
 micro-stores** in Seattle's dense core. Built on real census, jobs, and street-network data,
 with every assumption flagged and the load-bearing ones swept.
 
+<!-- LIVE DEMO SLOT: after deploying on Streamlit Community Cloud, replace this
+     comment with a line like:
+     **▶ [Live demo](https://YOUR-APP.streamlit.app)** — no install needed. -->
+
 > **Verdict: conditionally feasible.** The condition is demand — the median store turns
 > fully-loaded positive above a **~1.7% daily capture rate** of its walkshed population.
 > Automation is the margin-maker at Seattle wages: cutting on-site labor from a staffed
@@ -17,9 +21,17 @@ with every assumption flagged and the load-bearing ones swept.
 
 ## 🎛️ Explore it interactively
 
-The model doubles as a what-if tool: pick the store count, walkshed radius, capture
-rate, wages, and staffing; the optimizer re-places the stores on the Seattle map and
-the per-store P&L updates live (stores turn green/red as they clear or miss viability).
+The model doubles as a what-if dashboard: pick the store count, walkshed radius, capture
+rate, wages, and staffing; the optimizer re-places the stores on the Seattle map and the
+per-store P&L updates live. Each store is a real corner ("15th Avenue & East Madison
+Street, Capitol Hill"), turns green/red as it clears or misses fully-loaded viability,
+and reports the **capture rate it would need to break even** — drag the staffing slider
+and the study's headline thresholds (~1.7% automated vs ~2.6% staffed) reproduce on
+screen.
+
+<!-- SCREENSHOT SLOT: run the app, capture the map with the metric row visible,
+     save it as docs/figures/app_explorer.png, then replace this comment with:
+     ![The interactive explorer](docs/figures/app_explorer.png) -->
 
 ```bash
 streamlit run app/app.py

@@ -79,8 +79,10 @@ reproducible from `src/geo/assign.py` + neighborhood polygon areas):**
 | Pioneer Square | ~11,000 |
 | Chinatown-ID / Capitol Hill | ~5,000–6,000 |
 
-**Derivation:** a 550–950 txn/day store against those walksheds implies daily capture of
-~1.2% (CBD, dense) up to ~5% (lighter districts / konbini-like penetration). Range
+**Derivation:** stores in a ~500–950 txn/day band (US in-store volumes below the 1,491/day
+all-transaction average once fuel-pump traffic is excluded; the Japanese ceiling on top —
+Amazon Go's reported ~550 sits inside the band) against those walksheds imply daily capture
+of ~1.2% (CBD, dense) up to ~5% (lighter districts / konbini-like penetration). Range
 **[0.01, 0.05]**, midpoint **0.025**. Interpreted as network penetration of *covered*
 catchment — Phase 3 siting counts only demand within store coverage radii.
 
@@ -97,7 +99,7 @@ attempts have struggled **commercially** but mostly on cost/economics, not obvio
   https://www.fastcompany.com/91483585/amazon-go-closing ·
   https://techcrunch.com/2024/10/04/amazon-closes-more-of-its-cashierless-convenience-stores/
 - **Foxtrot** (staffed small-format urban fresh convenience + café): the closest U.S.
-  *attempt* on the demand side — but an imperfect konbini analog: premium/curated
+  *attempt* on the demand side, but an imperfect konbini analog: premium/curated
   positioning rather than the konbini's cheap mass market, café seating, and conventional
   distribution with none of the commissary + multi-daily-replenishment logistics or
   density strategy. Abruptly closed all 35 stores and filed Chapter 7 in 2024; a few
@@ -109,10 +111,9 @@ attempts have struggled **commercially** but mostly on cost/economics, not obvio
   https://www.mintel.com/insights/market-news/foxtrot-doms-market-sudden-closure-the-broader-impact/
 
 **How this strengthens the project:** these are real-world tests of exactly what I model,
-and they broke on the **unit economics** (lease + labor/tech costs, price sensitivity) — the
+and they broke on the **unit economics** (lease + labor/tech costs, price sensitivity), the
 very constraint Phase 5 quantifies. It confirms the feasibility answer is genuinely uncertain
-and likely *conditional*, not an obvious yes. Excellent README "why this question is live"
-material.
+and likely *conditional*.
 
 ### `avg_ticket` = $7.80 (range $5–$10)
 - **U.S. convenience average in-store basket, 2023 = $7.80** (up 3.7% year-over-year), per

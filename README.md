@@ -9,8 +9,9 @@ with every assumption flagged and the load-bearing ones swept.
 > fully-loaded positive above a **~1.7% daily capture rate** of its walkshed population.
 > Automation is the margin-maker at Seattle wages: cutting on-site labor from a staffed
 > model (32 h/day) to an automated one (6 h/day) is worth **~$554 per store-day**, moving
-> the required capture from ~2.6% down to ~1.7%. Below ~1.5% capture, nothing works —
-> no labor model rescues absent demand.
+> the required capture from ~2.6% down to ~1.7%. Below ~1.5% capture the median store
+> loses money at any staffing level — automation widens the viable band but cannot rescue
+> soft demand; only the densest few corners stay positive.
 
 ![The verdict vs. the star parameter](docs/figures/sensitivity_capture.png)
 
@@ -36,8 +37,8 @@ North American stores by 2030, with exactly this logistics flagged as the obstac
 The catch is economics. Japan's model leans on affordable, dense labor; Seattle's minimum
 wage ($21.30, 2026) is among the highest in the U.S., and the closest American attempts have
 struggled — **Amazon Go is being wound down and Foxtrot went bankrupt in 2024**, failures
-that industry coverage attributes largely to cost structure rather than to a proven absence
-of demand. So the node modeled here is a **low-labor, largely automated fresh micro-store**,
+that industry coverage attributes largely to cost structure and pricing rather than to a
+proven absence of demand. So the node modeled here is a **low-labor, largely automated fresh micro-store**,
 and *how automated it has to be* is the lever the study turns on. (Amazon Go is the
 cautionary reference: it automated *checkout* only, kept restocking/prep labor, and paid for
 expensive sensor tech — one failed design point, not proof the concept can't work.)
@@ -72,8 +73,8 @@ tracts to 7 neighborhoods. Worker-weighting is decisive: Capitol Hill is #1 by r
 but #5 by demand; the CBD (7k residents, 77k jobs) dominates.
 
 **2 — Network.** OSMnx drive graph (2,251 intersections), per-edge speeds from OSM tags,
-×1.4 congestion factor. All 7 neighborhoods sit 3.9–9.8 congested minutes from the SoDo
-hub — ~3× headroom inside the 30-min fresh window. **Reach is not the constraint** in this
+×1.4 congestion factor. All 7 neighborhood centers sit 3.9–9.8 congested minutes from the
+SoDo hub — ~3× headroom inside the 30-min fresh window. **Reach is not the constraint** in this
 land-contiguous core.
 
 **3 — Siting.** MCLP over 1,061 street-corner demand points (demand split from tract
@@ -101,9 +102,9 @@ Then the star sweeps produce the verdict and the automation result:
 
 | Lever | Tipping point |
 |---|---|
-| **Capture rate** (the star) | median store viable above **~1.7%** (automated) / ~2.6% (staffed); dead below ~1.5% |
+| **Capture rate** (the star) | median store viable above **~1.7%** (automated) / ~2.6% (staffed); below ~1.5% the median fails at any staffing level |
 | **Automation** (6h vs 32h labor @ $21.30) | ≈ **$554/store-day** ≈ 0.9pp of capture slack |
-| **Store count p** | marginal store revenue falls 16× across p=6→20; viable network ≈ 9–12 stores at baseline |
+| **Store count p** | marginal store revenue falls 16× across p=6→20; formally evaluated at p=10 (9 of 10 viable) — marginal-store arithmetic puts the ceiling in the mid-teens |
 | Fresh window | binds the fleet (not capacity) — relaxing it shrinks vans; tightening it multiplies them |
 | **Joint pessimism** (capture 1.5% + rent $12k + spoilage 15% + wage $26) | network flips to **−$3.5k/day**; only the 3 densest corners survive — the verdict is genuinely conditional |
 

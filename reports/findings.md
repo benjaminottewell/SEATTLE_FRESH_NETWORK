@@ -39,7 +39,7 @@ decisive: Capitol Hill ranks #1 by residents but #5 by demand once jobs dominate
 (7.4k residents, 77k jobs) ranks #1. External cross-check: our 283k study-area jobs vs the
 Downtown Seattle Association's ~337k for its (larger) downtown definition.
 
-**Drive times.** All 7 neighborhoods are 3.9–9.8 congested minutes from the SoDo hub —
+**Drive times.** All 7 neighborhood centers are 3.9–9.8 congested minutes from the SoDo hub —
 roughly 3× headroom inside the 30-minute fresh window. Within this land-contiguous core,
 **logistics reach is not the binding constraint**. (Cross-water expansion, where geography
 does bind, is deferred future work.)
@@ -75,8 +75,8 @@ margin-maker at Seattle wages.**
 | Median store fully-loaded break-even (automated, 6h) | **capture ≈ 1.7%** |
 | Median store fully-loaded break-even (staffed, 32h) | **capture ≈ 2.6%** |
 | Automation dividend (6h vs 32h @ $21.30/h) | **≈ $554/store-day ≈ 0.9pp of capture slack** |
-| Below capture ≈ 1.5% | Nothing works — no labor model rescues absent demand |
-| Viable network size at baseline | ~9–10 stores; beyond that marginal catchment is too thin |
+| Below capture ≈ 1.5% | Median store negative at any staffing level; only the densest corners persist (5 of 10 at 1.5%, 1 of 10 at 1.0%) |
+| Viable network size at baseline | Formally evaluated at p=10: 9 of 10 viable. Marginal-store arithmetic (revenue vs cost incl. hub share) puts the ceiling in the mid-teens — not formally optimized |
 
 The staffed reference case sits almost exactly at break-even at baseline demand — an
 independent rhyme with Foxtrot's real-world failure. Automation doesn't create demand; it

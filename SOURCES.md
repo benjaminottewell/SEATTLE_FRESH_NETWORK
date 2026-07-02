@@ -125,6 +125,15 @@ material.
 
 ---
 
+### `spoilage_rate` = 0.08 (range 0.03–0.15) ⭐ — plausibility-checked
+No clean published percentage exists, but konbini waste reporting gives absolutes:
+roughly **¥20,000–50,000 of discarded food per store per day** against ~¥664,000/day
+typical sales ⇒ waste ≈ **3–7.5% of sales value**. Our 8%-of-COGS assumption equals
+5.2% of revenue — mid-band. Flag stays `assumed` (the check is order-of-magnitude,
+not a measurement); the 3–15% sweep spans the plausible space.
+https://planetforward.org/story/reinventing-convenience-konbini/ ·
+https://zenbird.media/where-does-japans-food-waste-come-from/
+
 ## 3. Validation / cross-checks
 
 ### Downtown employment (external sanity check)

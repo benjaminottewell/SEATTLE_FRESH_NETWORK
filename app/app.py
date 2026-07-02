@@ -135,7 +135,7 @@ st.caption("Blue dots = demand at street corners (size = catchment). Circles = c
 show = stores[["txns_day", "revenue", "contribution", "fully_loaded"]].copy()
 show = show.sort_values("contribution", ascending=False).round(0).reset_index(drop=True)
 show.index = [f"store {i + 1}" for i in show.index]
-st.dataframe(show, use_container_width=True)
+st.dataframe(show, width="stretch")
 st.caption("Delivery share fixed at the Phase-4 baseline ($77/store-day; the fleet is "
            "freshness-window-bound, so it is ~insensitive to demand volume). Rent, hub "
            "opex, and capex amortization from assumptions.yaml.")

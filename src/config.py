@@ -50,11 +50,11 @@ def get_range(assumptions, *keys):
 
 
 def get_census_key():
-    """Return your Census API key, or None if it isn't set up yet.
+    """Return the Census API key, or None if it isn't configured.
 
-    Looks first at the CENSUS_API_KEY environment variable, then at a local
-    .env file in the project root. The .env file is git-ignored, so your key
-    stays private and never gets committed.
+    Checks the CENSUS_API_KEY environment variable first, then a local .env
+    file in the project root. The .env file is git-ignored so the key never
+    enters version control.
     """
     key = os.environ.get("CENSUS_API_KEY")
     if key:

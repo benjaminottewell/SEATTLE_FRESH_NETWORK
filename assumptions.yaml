@@ -5,18 +5,17 @@
 # This file is the heart of the project's credibility. EVERY operational and
 # cost parameter lives here, and every one carries a `source` field:
 #
-#     source: "cited"   -> backed by a published benchmark (put the link/ref in `note`)
-#     source: "assumed" -> our own estimate (explain the reasoning in `note`)
+#     source: "cited"   -> backed by a published source (links in SOURCES.md)
+#     source: "derived" -> computed from cited inputs plus stated assumptions
+#     source: "assumed" -> our own estimate or a design choice (reasoning in `note`)
 #
 # Rule: never bury a number in code. If a value matters, it lives here.
 # The sensitivity analysis (Phase 5) sweeps the values flagged `star: true`.
-#
-# Values below are PLACEHOLDERS to be replaced with sourced numbers as we build.
 # ============================================================================
 
 meta:
   project: "Konbini-Seattle feasibility model"
-  version: "0.1.0-skeleton"
+  version: "1.0.0"
   currency: "USD"
   notes: "v1.0 study area = dense northern core; production hub = SoDo."
   sources: "All external data + benchmark citations with links: see SOURCES.md"
@@ -63,7 +62,7 @@ demand:
   visit_frequency:
     value: 1.0           # visits per capturing customer per day
     source: "assumed"
-    note: "PLACEHOLDER."
+    note: "Definitional: capture_rate already counts transactions per person-day, so this stays 1.0; kept as an explicit knob."
   avg_ticket:
     value: 7.80          # average $ spent per visit
     range: [5.0, 10.0]
@@ -90,7 +89,10 @@ network:
   fresh_delivery_window_min:
     value: 30
     source: "assumed"
-    note: "PLACEHOLDER. Max drive-time hub->store for short-shelf-life items."
+    note: >
+      Design parameter of the concept, not an empirical claim: short-shelf-life goods
+      must land within this window of leaving the hub. Phase 4 shows it is the binding
+      constraint on fleet size (~3 stops per van), so it is a prime what-if lever.
   congestion_factor:
     value: 1.4
     range: [1.2, 1.8]
@@ -112,9 +114,9 @@ facility_location:
     star: true
     note: "MCLP fixed-p. Sweeping p drives routing + economics."
   coverage_radius_m:
-    value: 400           # walk/drive catchment radius per node
+    value: 400           # walk catchment radius per node
     source: "assumed"
-    note: "PLACEHOLDER. ~5 min walk. Area-dominance density constraint applies."
+    note: "~5-minute walk, a standard pedestrian-catchment convention; a behavioral design choice rather than a measurement."
 
 # ----------------------------------------------------------------------------
 # 5. ROUTING / CADENCE  (Phase 4)  --  Vehicle Routing Problem w/ time windows
@@ -203,7 +205,10 @@ economics:
   product_cost_ratio:
     value: 0.65          # COGS as fraction of revenue
     source: "assumed"
-    note: "PLACEHOLDER. Convenience/fresh blended margin."
+    note: >
+      Industry-typical mid-60s COGS for convenience retail. The exact in-store margin
+      is published in the NACS State of the Industry report (paywalled) -- open
+      grounding item; value is consistent with the free category-level reporting.
   spoilage_rate:
     value: 0.08          # fraction of product purchased that is wasted (applied on COGS)
     range: [0.03, 0.15]
@@ -218,7 +223,11 @@ economics:
   hub_opex_per_day:
     value: 5000
     source: "assumed"
-    note: "PLACEHOLDER. SoDo commissary daily operating cost, allocated across nodes."
+    note: >
+      SoDo commissary daily operating cost, allocated equally across nodes. Genuinely
+      unbenchmarkable: no US analog of this commissary format exists to measure. The
+      stress case shows the network is sensitive to fixed costs, so this is a candidate
+      for a future dedicated sweep.
 
 # ----------------------------------------------------------------------------
 # 7. FEASIBILITY BAR  (Phase 5)  --  PRE-REGISTERED. Do not change after seeing results.

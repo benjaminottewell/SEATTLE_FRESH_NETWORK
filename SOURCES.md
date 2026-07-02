@@ -48,7 +48,7 @@ verified resolving on this date).
 - **Access (used):** https://raw.githubusercontent.com/seattleio/seattle-boundaries-data/master/data/neighborhoods.geojson
 - **Original source:** https://data-seattlecitygis.opendata.arcgis.com/datasets/city-clerk-neighborhoods
 - **Code:** [`src/geo/neighborhoods.py`](src/geo/neighborhoods.py) → `fetch_study_neighborhoods()`
-- **Note:** The dataset's fine `name` values are reconciled to our study names in the
+- **Note:** The dataset's fine `name` values are reconciled to my study-area names in the
   `STUDY_AREA` map (Capitol Hill = the "Broadway" core).
 
 ---
@@ -56,9 +56,9 @@ verified resolving on this date).
 ## 2. Assumption benchmarks (parameter grounding)
 
 ### `capture_rate` = 0.025 (range 0.01–0.05) ⭐ — flag: **derived**
-Fraction of the daytime catchment that transacts per day — the model's most uncertain input,
-which is why the swept range is deliberately wide. No published number exists for this exact
-format, so it is **derived** from cited transaction volumes and our own computed densities
+Fraction of the daytime catchment that transacts per day, which is the model's most uncertain input.
+That is why the swept range is deliberately wide. No published number exists for this exact
+format, so it is **derived** from cited transaction volumes and my own computed densities
 (not flagged `cited` — that would overclaim).
 
 **Cited numerators (store transaction volumes):**
@@ -69,7 +69,7 @@ format, so it is **derived** from cited transaction volumes and our own computed
 - **Japanese 7-Eleven (the ceiling analog):** ~¥664k/day sales ⇒ ~950 customers/day at the
   ~¥700 (~$4–5) konbini basket. https://www.statista.com/topics/8484/convenience-stores-in-japan/
 
-**Computed denominator (people per 400m walkshed, from our own apportioned data —
+**Computed denominator (people per 400m walkshed, from my apportioned data —
 reproducible from `src/geo/assign.py` + neighborhood polygon areas):**
 
 | Neighborhood | Catchment ÷ area ⇒ per 400m walkshed |
@@ -85,7 +85,7 @@ reproducible from `src/geo/assign.py` + neighborhood polygon areas):**
 catchment — Phase 3 siting counts only demand within store coverage radii.
 
 > ⚠️ An earlier draft anchored on **Amazon Go** (~550 txns/day). That figure is a 2018–19
-> hype-era analyst estimate, and the concept is now being wound down — so it is used only as
+> hype-era analyst estimate, and the concept is now being wound down, so it is used only as
 > illustrative context (below), **not** a load-bearing anchor.
 
 ### Market context — have U.S. konbini-style ventures worked?
@@ -103,7 +103,7 @@ attempts have struggled **commercially** — mostly on cost/economics, not obvio
   https://en.wikipedia.org/wiki/Foxtrot_(convenience_store) ·
   https://www.mintel.com/insights/market-news/foxtrot-doms-market-sudden-closure-the-broader-impact/
 
-**Why this strengthens the project:** these are real-world tests of exactly what we model,
+**Why this strengthens the project:** these are real-world tests of exactly what I model,
 and they broke on the **unit economics** (lease + labor/tech costs, price sensitivity) — the
 very constraint Phase 5 quantifies. It confirms the feasibility answer is genuinely uncertain
 and likely *conditional*, not an obvious yes. Excellent README "why this question is live"
@@ -151,7 +151,7 @@ material.
 ### `spoilage_rate` = 0.08 (range 0.03–0.15) ⭐ — plausibility-checked
 No clean published percentage exists, but konbini waste reporting gives absolutes:
 roughly **¥20,000–50,000 of discarded food per store per day** against ~¥664,000/day
-typical sales ⇒ waste ≈ **3–7.5% of sales value**. Our 8%-of-COGS assumption equals
+typical sales ⇒ waste ≈ **3–7.5% of sales value**. My 8%-of-COGS assumption equals
 5.2% of revenue — mid-band. Flag stays `assumed` (the check is order-of-magnitude,
 not a measurement); the 3–15% sweep spans the plausible space.
 https://planetforward.org/story/reinventing-convenience-konbini/ ·
@@ -161,7 +161,7 @@ https://zenbird.media/where-does-japans-food-waste-come-from/
 
 ### Downtown employment (external sanity check)
 - **Downtown Seattle Association** State of Downtown: ~**337,000 jobs** in downtown Seattle.
-  Our model's 7-neighborhood total is ~283,000 worker jobs — consistent given differing
+  My model's 7-neighborhood total is ~283,000 worker jobs — consistent given differing
   boundary definitions.
   https://www.kuow.org/stories/seattle-has-lost-its-mojo-downtown-seattle-association-report-claims-taxes-are-driving-out-jobs
 

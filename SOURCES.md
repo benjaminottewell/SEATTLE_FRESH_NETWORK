@@ -174,9 +174,20 @@ https://zenbird.media/where-does-japans-food-waste-come-from/
 ---
 
 ## 4. Methodological / prior work
-- Location-routing template (set-covering + multi-depot capacitated VRP with time windows,
-  MDCVRP-TW) adapted from a U.S. food-desert grocery-hub study. Full citation to be added
-  in the README "Related Work" section (see [`SEATTLE_PLAN.md`](SEATTLE_PLAN.md) §3a).
+- **Location-routing template:**
+  Haider, Z., Hu, Y., Charkhgard, H., Himmelgreen, D., & Kwon, C. (2022).
+  *Creating grocery delivery hubs for food deserts at local convenience stores via
+  spatial and temporal consolidation.* **Socio-Economic Planning Sciences, 82** (Part B).
+  Uses minimum-cost set covering plus a CVRP "with multiple depots and time-windows,
+  which we call MDCVRP-TW" (the paper's own coinage), with experiments in three U.S.
+  counties and convenience stores as grocery hubs. This project borrows the
+  covering-plus-routing structure and differs by application (konbini multi-daily fresh
+  cadence, MCLP instead of set-covering, fixed-hub decomposition, Seattle economics).
+  https://www.sciencedirect.com/science/article/abs/pii/S0038012122000866 ·
+  free PDF: https://www.chkwon.net/papers/haider_creating.pdf ·
+  https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3603062
+- MCLP formulation: Church, R., & ReVelle, C. (1974). *The maximal covering location
+  problem.* Papers of the Regional Science Association, 32.
 
 ---
 

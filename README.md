@@ -57,7 +57,7 @@ expensive sensor tech — one failed design point, not proof the concept can't w
 The methods are deliberately established: set-covering / maximal-covering facility location
 and multi-depot capacitated VRP with time windows are mature techniques, and the closest
 template is a U.S. food-desert study combining set-covering with MDCVRP-TW across three
-counties. This project adapts that location-routing structure to a different application —
+counties ([Haider et al., 2022, *Socio-Economic Planning Sciences*](https://www.chkwon.net/papers/haider_creating.pdf)). This project adapts that location-routing structure to a different application —
 konbini multi-daily fresh cadence, area-dominance density, and Seattle's specific
 labor/geography economics. Siting uses **MCLP** (maximal covering with fixed p, per Church &
 ReVelle) rather than set-covering, because capital — not coverage — is the binding

@@ -2,14 +2,12 @@
 #  assumptions.yaml  --  the single source of truth for every tunable number
 # ============================================================================
 #
-# This file is the heart of the project's credibility. EVERY operational and
-# cost parameter lives here, and every one carries a `source` field:
+# EVERY operational and cost parameter is listed here, and every one carries a `source` field:
 #
 #     source: "cited"   -> backed by a published source (links in SOURCES.md)
 #     source: "derived" -> computed from cited inputs plus stated assumptions
 #     source: "assumed" -> our own estimate or a design choice (reasoning in `note`)
 #
-# Rule: never bury a number in code. If a value matters, it lives here.
 # The sensitivity analysis (Phase 5) sweeps the values flagged `star: true`.
 # ============================================================================
 
@@ -230,7 +228,7 @@ economics:
       for a future dedicated sweep.
 
 # ----------------------------------------------------------------------------
-# 7. FEASIBILITY BAR  (Phase 5)  --  PRE-REGISTERED. Do not change after seeing results.
+# 7. FEASIBILITY BAR  (Phase 5)  --  PRE-REGISTERED, so do not change after seeing results.
 # ----------------------------------------------------------------------------
 feasibility_bar:
   primary:

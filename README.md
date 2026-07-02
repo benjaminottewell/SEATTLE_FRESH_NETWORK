@@ -15,6 +15,20 @@ with every assumption flagged and the load-bearing ones swept.
 
 ![The verdict vs. the star parameter](docs/figures/sensitivity_capture.png)
 
+## 🎛️ Explore it interactively
+
+The model doubles as a what-if tool: pick the store count, walkshed radius, capture
+rate, wages, and staffing; the optimizer re-places the stores on the Seattle map and
+the per-store P&L updates live (stores turn green/red as they clear or miss viability).
+
+```bash
+streamlit run app/app.py
+```
+
+No API keys needed — the demand surface ships precomputed ([app/](app/)). Placement
+re-optimizes in a few seconds when store count or radius changes; the economic levers
+respond instantly.
+
 ---
 
 ## Why I built this

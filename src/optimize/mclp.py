@@ -13,7 +13,8 @@ from pulp import LpProblem, LpMaximize, LpVariable, lpSum, PULP_CBC_CMD, value
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
 from src.config import load_assumptions, get_value
-from src.optimize.prep import build_siting_inputs
+# build_siting_inputs is imported in the __main__ block only, so lightweight
+# consumers (the interactive app) can import solve_mclp without the geo stack.
 
 
 def solve_mclp(weights, reachable, p, gap=None, time_limit=None):
@@ -48,6 +49,7 @@ def solve_mclp(weights, reachable, p, gap=None, time_limit=None):
 
 
 if __name__ == "__main__":
+    from src.optimize.prep import build_siting_inputs
     points, weights, reachable = build_siting_inputs()
     p = get_value(load_assumptions(), "facility_location", "num_nodes_p")
 

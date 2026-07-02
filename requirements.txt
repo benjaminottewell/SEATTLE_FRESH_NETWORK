@@ -34,3 +34,6 @@ folium             # interactive Leaflet maps
 
 # --- Notebooks ---
 jupyter
+
+# --- Interactive explorer (app/) ---
+streamlit

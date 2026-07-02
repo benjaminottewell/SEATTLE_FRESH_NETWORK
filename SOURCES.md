@@ -90,20 +90,25 @@ catchment — Phase 3 siting counts only demand within store coverage radii.
 
 ### Market context — have U.S. konbini-style ventures worked?
 Directly relevant to the feasibility question, and honest to surface: the closest U.S.
-attempts have struggled **commercially** — mostly on cost/economics, not obviously on demand.
+attempts have struggled **commercially** but mostly on cost/economics, not obviously on demand.
 - **Amazon Go** (cashierless grab-and-go): down to ~17 stores by late 2024 (NYC closures
   cited high lease costs); Amazon announced it is closing **all** Amazon Go + Amazon Fresh
   stores by ~early 2026, refocusing "Just Walk Out" on ~360 third-party sites.
   https://www.fastcompany.com/91483585/amazon-go-closing ·
   https://techcrunch.com/2024/10/04/amazon-closes-more-of-its-cashierless-convenience-stores/
-- **Foxtrot** (upscale urban convenience + café hybrid — arguably the closest U.S. konbini
-  analog): abruptly closed all 35 stores and filed Chapter 7 in 2024; a few Chicago
-  locations later reopened under new ownership. Closure framed around shoppers
-  "recalculating the value of convenience" (price vs. time saved).
+- **Foxtrot** (staffed small-format urban fresh convenience + café): the closest U.S.
+  *attempt* on the demand side — but an imperfect konbini analog: premium/curated
+  positioning rather than the konbini's cheap mass market, café seating, and conventional
+  distribution with none of the commissary + multi-daily-replenishment logistics or
+  density strategy. Abruptly closed all 35 stores and filed Chapter 7 in 2024; a few
+  Chicago locations later reopened under new ownership. Closure framed around shoppers
+  "recalculating the value of convenience." **What its failure evidences for this model:**
+  the fully-staffed cost stack of small-format urban fresh retail at U.S. wages/rents —
+  not the konbini logistics system, which it never ran.
   https://en.wikipedia.org/wiki/Foxtrot_(convenience_store) ·
   https://www.mintel.com/insights/market-news/foxtrot-doms-market-sudden-closure-the-broader-impact/
 
-**Why this strengthens the project:** these are real-world tests of exactly what I model,
+**How this strengthens the project:** these are real-world tests of exactly what I model,
 and they broke on the **unit economics** (lease + labor/tech costs, price sensitivity) — the
 very constraint Phase 5 quantifies. It confirms the feasibility answer is genuinely uncertain
 and likely *conditional*, not an obvious yes. Excellent README "why this question is live"

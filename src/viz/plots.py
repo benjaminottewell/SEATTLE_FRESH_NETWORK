@@ -297,7 +297,7 @@ def plot_automation_sensitivity(hours, baseline_hours, output_path=None):
     ax.annotate("automated baseline", (baseline_hours, ax.get_ylim()[0] * 0.9),
                 rotation=90, fontsize=11, color="gray", ha="right", va="bottom")
     ax.axvline(32, color="gray", linestyle=":", linewidth=1.5)
-    ax.annotate("fully staffed (Foxtrot model)", (32, ax.get_ylim()[0] * 0.9),
+    ax.annotate("fully staffed reference", (32, ax.get_ylim()[0] * 0.9),
                 rotation=90, fontsize=11, color="gray", ha="right", va="bottom")
     ax.set_xlabel("On-site staff hours per store-day")
     ax.set_ylabel("Median store fully-loaded $/day")

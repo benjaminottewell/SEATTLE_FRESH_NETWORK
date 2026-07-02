@@ -13,9 +13,10 @@ micro-stores** pencil out in Seattle's dense northern core — and how much auto
 what store density does it take to flip it from infeasible to feasible?
 
 The node being tested is *not* Amazon Go (which automated checkout only, kept prep/restock
-labor, and carried expensive sensor tech) and *not* a staffed store (Foxtrot ran that
-experiment; it filed Chapter 7 in 2024). It is a small multi-SKU fresh store, replenished
-2–3×/day from a SoDo commissary, run on ~6 on-site labor hours/day.
+labor, and carried expensive sensor tech) and *not* a staffed store (Foxtrot — the closest
+U.S. attempt at staffed small-format urban fresh convenience, though premium-positioned and
+without konbini logistics — filed Chapter 7 in 2024). It is a small multi-SKU fresh store,
+replenished 2–3×/day from a SoDo commissary, run on ~6 on-site labor hours/day.
 
 ## 2. Method (the chain)
 

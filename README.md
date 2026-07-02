@@ -105,6 +105,7 @@ Then the star sweeps produce the verdict and the automation result:
 | **Automation** (6h vs 32h labor @ $21.30) | ≈ **$554/store-day** ≈ 0.9pp of capture slack |
 | **Store count p** | marginal store revenue falls 16× across p=6→20; viable network ≈ 9–12 stores at baseline |
 | Fresh window | binds the fleet (not capacity) — relaxing it shrinks vans; tightening it multiplies them |
+| **Joint pessimism** (capture 1.5% + rent $12k + spoilage 15% + wage $26) | network flips to **−$3.5k/day**; only the 3 densest corners survive — the verdict is genuinely conditional |
 
 ## Honest limitations
 

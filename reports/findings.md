@@ -82,6 +82,31 @@ independent rhyme with Foxtrot's real-world failure. Automation doesn't create d
 widens the demand band in which the concept survives — from "needs konbini-tier adoption"
 (~2.6%) to "needs good adoption" (~1.7%).
 
+### Stress case: what if we're wrong about everything at once?
+
+The sweeps above vary one parameter at a time; bad worlds correlate. `src/econ/stress.py`
+sets four levers **jointly adverse** (capture 1.5%, rent $12k/mo, spoilage 15%, wage $26 —
+each inside its swept range) and re-runs the P&L:
+
+| | Baseline | **Stress** |
+|---|---|---|
+| Pre-registered bar (contribution > 0) | 10 / 10 | **10 / 10** |
+| Fully-loaded positive stores | 9 / 10 | **3 / 10** |
+| Network fully-loaded total | +$6,211/day | **−$3,486/day** |
+
+Read: the *variable* economics survive even joint pessimism (every store still covers
+product, delivery, and labor), but the **fixed-cost stack — rent, hub allocation, capex —
+kills the network**: only the three densest corners (~620–690 txns/day even at 1.5%
+capture) stay positive, and only barely (+$32 to +$166/day). A cherry-picked 3-store
+network is the surviving skeleton — with the caveat that hub opex is still allocated
+across 10 stores here; at p=3 the hub share triples and would sink those too unless the
+commissary shrinks with the network.
+
+**So the verdict is genuinely conditional, and this is the boundary:** under joint
+pessimism the 10-store concept fails. Feasibility lives or dies on the baseline
+assumptions being roughly right — chiefly capture — which is exactly why they are
+sourced, derived, and swept rather than asserted.
+
 ## 5. Honest limitations
 
 - **Baseline optimism.** Top-store volumes (1,100+ txns/day) are busiest-konbini territory;

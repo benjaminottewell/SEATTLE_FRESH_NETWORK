@@ -23,6 +23,7 @@ PIPELINE = [
     ("Phase 4  delivery routing (VRPTW) + cadence cost",          "src/optimize/routing.py"),
     ("Phase 5  per-store economics vs the pre-registered bar",    "src/econ/economics.py"),
     ("Phase 5  sensitivity sweeps (the verdict charts)",          "src/econ/sensitivity.py"),
+    ("Phase 5  stress case (joint pessimism)",                    "src/econ/stress.py"),
 ]
 
 if __name__ == "__main__":

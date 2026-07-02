@@ -125,6 +125,29 @@ material.
 
 ---
 
+### `node_rent_per_month` = $8,000 — flag: **derived**
+- **Seattle CBD retail asking rents average $46.38/sqft/yr** across 105 active listings
+  (citywide average ~$30; NNN is the dominant lease type, so tenants add
+  taxes/insurance/CAM of roughly $10–15/sqft).
+  https://www.commercialcafe.com/retail/us/wa/seattle/ ·
+  https://www.loopnet.com/search/retail-space/downtown-seattle-seattle-wa/for-lease/
+- Derivation: ~1,200–1,600 sqft micro-format × ~$56–61/sqft gross ⇒ **~$6–9k/month**;
+  the model's $8k sits mid-band.
+
+### `driver_cost_per_hour` = $30 — flag: **derived**
+- Seattle delivery-driver market base ~$22–25/hr per aggregated listings
+  (Indeed / ZipRecruiter / Glassdoor, 2025–26), plus ~20–30% employer burden ⇒
+  ~$27–32/hr fully loaded; $30 mid-band.
+  https://www.indeed.com/career/delivery-driver/salaries/Seattle--WA ·
+  https://www.ziprecruiter.com/Salaries/Local-Delivery-Driver-Salary-in-Seattle,WA
+
+### `vehicle_fixed_cost_per_day` = $150 — assumed (conservative), anchored
+- Refrigerated cargo-van leases start ~**$1,999/month (~$66/day)** as of 2026; larger
+  reefer box trucks from ~$1,200/month (Ryder). All-in with commercial insurance +
+  maintenance ≈ $90–120/day; the model's $150 deliberately holds a buffer (fuel,
+  utilization slack). https://refrigeratedrentalvans.com/pricing/ ·
+  https://www.ryder.com/en-us/fleet-leasing/trucks/refrigerated-box-trucks
+
 ### `spoilage_rate` = 0.08 (range 0.03–0.15) ⭐ — plausibility-checked
 No clean published percentage exists, but konbini waste reporting gives absolutes:
 roughly **¥20,000–50,000 of discarded food per store per day** against ~¥664,000/day

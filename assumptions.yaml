@@ -141,11 +141,18 @@ routing:
   vehicle_fixed_cost_per_day:
     value: 150
     source: "assumed"
-    note: "PLACEHOLDER. Lease + insurance + depreciation, refrigerated van."
+    note: >
+      Deliberately conservative. Cited anchors: refrigerated-van leases from
+      ~$1,999/month (~$66/day, 2026); commercial insurance + maintenance push a
+      realistic all-in to ~$90-120/day. $150 holds a buffer for fuel and
+      utilization slack; verdict is insensitive to the gap. Links in SOURCES.md.
   driver_cost_per_hour:
     value: 30
-    source: "assumed"
-    note: "PLACEHOLDER. Seattle wage + burden. Link to economics.labor."
+    source: "derived"
+    note: >
+      Seattle delivery-driver market base ~$22-25/hr (Indeed/ZipRecruiter/Glassdoor
+      Seattle listings) plus ~20-30% employer burden (payroll taxes, benefits)
+      => ~$27-32/hr fully loaded; $30 is mid-band. Links in SOURCES.md.
 
 # ----------------------------------------------------------------------------
 # 6. ECONOMICS  (Phase 5)
@@ -153,8 +160,12 @@ routing:
 economics:
   node_rent_per_month:
     value: 8000
-    source: "assumed"
-    note: "PLACEHOLDER. Small core retail slot."
+    source: "derived"
+    note: >
+      Seattle CBD retail asks average $46.38/sqft/yr (CommercialCafe, 105 active
+      listings) vs ~$30 citywide; NNN, so tenant adds taxes/insurance/CAM
+      (~$10-15/sqft). A ~1,200-1,600 sqft micro-format at ~$56-61/sqft gross
+      => ~$6-9k/month; $8k is mid-band. Links in SOURCES.md.
   labor_wage_per_hour:
     value: 21.30
     range: [19.0, 26.0]

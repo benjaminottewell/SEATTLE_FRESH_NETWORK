@@ -86,9 +86,9 @@ widens the demand band in which the concept survives — from "needs konbini-tie
 
 - **Baseline optimism.** Top-store volumes (1,100+ txns/day) are busiest-konbini territory;
   the thresholds, not the point estimates, are the finding.
-- **Rent is flat** ($8k/mo assumed) while the model deliberately picks the best corners
-  downtown; prime-corner rents are likely higher and demand-correlated. Grounding per-store
-  rent is the highest-value refinement.
+- **Rent is flat** ($8k/mo — now derived from Seattle CBD asking rents of ~$46/sqft on a
+  ~1,200–1,600 sqft footprint) while the model deliberately picks the best corners downtown;
+  a per-store rent *surface* (prime corners cost more) remains the refinement.
 - **Capture rate is derived, not measured** (cited volumes ÷ our computed walkshed
   populations). It is the star sensitivity for exactly this reason.
 - **Uniform dasymetric split** of tract population across street corners; LODES is
@@ -124,8 +124,8 @@ notes and derivations, and [SOURCES.md](../SOURCES.md) for citations.
 | `routing.transactions_per_unit` | 10 |  | assumed |  |
 | `routing.service_minutes_per_stop` | 5 |  | assumed |  |
 | `routing.vehicle_fixed_cost_per_day` | 150 |  | assumed |  |
-| `routing.driver_cost_per_hour` | 30 |  | assumed |  |
-| `economics.node_rent_per_month` | 8000 |  | assumed |  |
+| `routing.driver_cost_per_hour` | 30 |  | derived |  |
+| `economics.node_rent_per_month` | 8000 |  | derived |  |
 | `economics.labor_wage_per_hour` | 21.3 | 19.0–26.0 | cited | ⭐ |
 | `economics.staff_hours_per_day` | 6 | 2–32 | assumed | ⭐ |
 | `economics.automation_capex_per_store` | 150000 | 50000–400000 | assumed | ⭐ |

@@ -166,7 +166,8 @@ layers = [
               stroked=True, get_line_color=[255, 255, 255], line_width_min_pixels=1.5,
               pickable=True),
 ]
-tooltip = {"html": "<b>Store</b><br>catchment {catch_disp}<br>"
+tooltip = {"html": "<b>{label}</b><br>{neighborhood}<br>"
+                   "catchment {catch_disp}<br>"
                    "fully loaded $/day: {fl_disp}<br>"
                    "break-even capture: {be_pct}%"}
 st.pydeck_chart(pdk.Deck(
@@ -178,12 +179,14 @@ st.caption("Blue dots = demand at street corners (size = catchment). Circles = c
            "Hover a store dot, or anywhere inside its walkshed circle, for its stats.")
 
 # ---------------- per-store table ----------------
-show = stores[["txns_day", "revenue", "contribution", "fully_loaded",
-               "breakeven_capture"]].copy()
+show = stores[["label", "neighborhood", "txns_day", "revenue", "contribution",
+               "fully_loaded", "breakeven_capture"]].copy()
 show["breakeven_capture"] = show["breakeven_capture"] * 100
 show = show.sort_values("contribution", ascending=False).reset_index(drop=True)
 show.index = [f"store {i + 1}" for i in show.index]
 st.dataframe(show, width="stretch", column_config={
+    "label": st.column_config.TextColumn("Corner"),
+    "neighborhood": st.column_config.TextColumn("Neighborhood"),
     "txns_day": st.column_config.NumberColumn("Transactions / day", format="%.0f"),
     "revenue": st.column_config.NumberColumn("Revenue ($/day)", format="$%.0f"),
     "contribution": st.column_config.NumberColumn("Contribution ($/day)", format="$%.0f"),

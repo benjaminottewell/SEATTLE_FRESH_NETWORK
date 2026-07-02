@@ -129,7 +129,15 @@ routing:
   vehicle_capacity_units:
     value: 200
     source: "assumed"
-    note: "PLACEHOLDER. Per-vehicle load in store-units."
+    note: "Refrigerated-van load in units; 1 unit = goods for ~10 transactions (see transactions_per_unit)."
+  transactions_per_unit:
+    value: 10
+    source: "assumed"
+    note: "Converts demand to van load: one delivery 'unit' (a case/tote) covers ~10 customer transactions."
+  service_minutes_per_stop:
+    value: 5
+    source: "assumed"
+    note: "Unload + restock handoff time per store visit. Adds to route duration inside the fresh window."
   vehicle_fixed_cost_per_day:
     value: 150
     source: "assumed"

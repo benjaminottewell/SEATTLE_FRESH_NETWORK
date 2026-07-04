@@ -73,6 +73,7 @@ if __name__ == "__main__":
               f"{med['capture_rate'].min():.3%}")
 
     from src.viz.plots import plot_capture_sensitivity, plot_automation_sensitivity
-    f1 = plot_capture_sensitivity(cap, baseline=get_value(a, "demand", "capture_rate"))
+    f1 = plot_capture_sensitivity(cap, baseline=get_value(a, "demand", "capture_rate"),
+                                  staff_hours=get_value(a, "economics", "staff_hours_per_day"))
     f2 = plot_automation_sensitivity(hours, baseline_hours=get_value(a, "economics", "staff_hours_per_day"))
     print(f"\nSaved charts -> {f1.name}, {f2.name}")

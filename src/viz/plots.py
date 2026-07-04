@@ -245,7 +245,7 @@ def plot_coverage_curve(curve, output_path=None):
     return output_path
 
 
-def plot_capture_sensitivity(cap, baseline, output_path=None):
+def plot_capture_sensitivity(cap, baseline, staff_hours=None, output_path=None):
     """THE verdict chart: how many stores are viable as capture_rate varies."""
     set_plot_style()
     if output_path is None:
@@ -268,7 +268,14 @@ def plot_capture_sensitivity(cap, baseline, output_path=None):
                  (baseline * 100, ax1.get_ylim()[1] * 0.05),
                  rotation=90, fontsize=11, color="gray", ha="right")
     ax1.set_ylabel("Viable stores (of 10)")
-    ax1.set_title("The verdict vs. the star parameter: capture rate")
+    if staff_hours is None:
+        ax1.set_title("The verdict vs. the star parameter: capture rate")
+    else:
+        # every sweep is conditional on staffing; subtitle says which store this is
+        ax1.set_title("The verdict vs. the star parameter: capture rate", pad=26)
+        ax1.text(0.5, 1.015, f"automated store: {staff_hours:g} h/day on-site labor",
+                 transform=ax1.transAxes, ha="center", va="bottom",
+                 fontsize=11.5, color="gray", style="italic")
     ax1.legend(loc="lower right", fontsize=12)
 
     ax2.plot(x, cap["median_fully_loaded"], color="#e4572e", linewidth=2.5)

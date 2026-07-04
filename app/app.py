@@ -116,8 +116,8 @@ c2.metric("Network revenue", f"${stores['revenue'].sum():,.0f}/day",
 c3.metric("Network profit, fully loaded", f"${stores['fully_loaded'].sum():,.0f}/day",
           help="Every store's fully-loaded P&L summed: the network's daily bottom line "
                "with all costs in (the commissary is fully paid for across stores). "
-               "Default settings reproduce the study's baseline of about +$6.2k/day; "
-               "its joint-pessimism stress case lands at −$3.5k/day.")
+               "Default settings reproduce the study's baseline of about +\\$6.2k/day; "
+               "its joint-pessimism stress case lands at −\\$3.5k/day.")
 c4.metric("Stores with contribution > 0", f"{int((stores['contribution'] > 0).sum())} of {p}",
           help="Contribution = revenue − product cost (incl. spoilage) − delivery share "
                "− on-site labor. The study's pre-registered feasibility bar.")

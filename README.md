@@ -94,16 +94,14 @@ constraint in a real-world commercial rollout. Store placement and delivery rout
 
 ```mermaid
 flowchart TD
-    census["Census data: ACS 2024 residents + LODES 2023 jobs"] --> demand
-    osm["OpenStreetMap road network"] --> network
-    demand["1 · Demand: weighted daytime catchment"] --> siting
-    network["2 · Network: congested drive times from the SoDo hub"] --> siting
-    network --> routing
-    siting["3 · Siting: MCLP places p stores on street corners"] --> routing
-    routing["4 · Routing: van fleet under the 30-minute fresh window"] --> econ
-    siting --> econ
-    econ["5 · Economics: per-store P&L vs the pre-registered bar"] --> sens
-    sens["Sensitivity sweeps + joint-pessimism stress case"] --> verdict(["Verdict: conditionally feasible, viable above ~1.7% capture"])
+    demand["1 · Demand: who is near each street corner on a workday (census + jobs data)"]
+    network["2 · Network: how long deliveries take on real streets (OpenStreetMap)"]
+    siting["3 · Siting: place p stores to cover the most people (MCLP)"]
+    routing["4 · Routing: size the van fleet inside the 30-minute freshness window (VRP)"]
+    econ["5 · Economics: does each store make money (per-store P&L)"]
+    sens["Sensitivity: which assumptions flip the answer"]
+    demand --> network --> siting --> routing --> econ --> sens
+    sens --> verdict(["Verdict: conditionally feasible, viable above ~1.7% capture"])
     econ --> app(["🎛️ Interactive explorer"])
 ```
 

@@ -1,6 +1,6 @@
 """Interactive siting + economics explorer for the Seattle fresh-network model.
 
-    streamlit run app/app.py
+    python -m streamlit run app/app.py
 
 A thin UI over the v1.0 model: pick the store count, walkshed, and economic
 levers; the MCLP re-optimizes placement (cached per p/radius) and the P&L

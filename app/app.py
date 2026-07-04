@@ -107,23 +107,28 @@ st.title("Seattle Fresh-Network Explorer")
 st.caption("Exploratory companion to the v1.0 feasibility model — see the README for "
            "the defended analysis, sources, and the pre-registered feasibility bar.")
 
-c1, c2, c3, c4, c5, c6 = st.columns(6)
+c1, c2, c3, c4, c5, c6, c7 = st.columns(7)
 c1.metric("Catchment covered", f"{covered / total:.0%}",
           help="Share of the weighted daytime population (workers + 0.5×residents) "
                "within a walkshed of at least one store.")
 c2.metric("Network revenue", f"${stores['revenue'].sum():,.0f}/day",
           help="Covered catchment × capture rate × average ticket, summed over stores.")
-c3.metric("Stores with contribution > 0", f"{int((stores['contribution'] > 0).sum())} of {p}",
+c3.metric("Network profit, fully loaded", f"${stores['fully_loaded'].sum():,.0f}/day",
+          help="Every store's fully-loaded P&L summed: the network's daily bottom line "
+               "with all costs in (the commissary is fully paid for across stores). "
+               "Default settings reproduce the study's baseline of about +$6.2k/day; "
+               "its joint-pessimism stress case lands at −$3.5k/day.")
+c4.metric("Stores with contribution > 0", f"{int((stores['contribution'] > 0).sum())} of {p}",
           help="Contribution = revenue − product cost (incl. spoilage) − delivery share "
                "− on-site labor. The study's pre-registered feasibility bar.")
-c4.metric("Fully-loaded positive", f"{int((stores['fully_loaded'] > 0).sum())} of {p}",
+c5.metric("Fully-loaded positive", f"{int((stores['fully_loaded'] > 0).sum())} of {p}",
           help="Contribution minus the fixed stack: rent, the store's share of commissary "
                "(hub) operating cost, and automation capex amortized over 7 years. "
                "The 'all costs in' operator view.")
-c5.metric("Median store, fully loaded", f"${stores['fully_loaded'].median():,.0f}/day",
+c6.metric("Median store, fully loaded", f"${stores['fully_loaded'].median():,.0f}/day",
           help="The middle store's daily profit with all costs in — the number the "
                "study's verdict thresholds are quoted on.")
-c6.metric("Median break-even capture", f"{stores['breakeven_capture'].median():.1%}",
+c7.metric("Median break-even capture", f"{stores['breakeven_capture'].median():.1%}",
           help="Capture rate at which the median store's fully-loaded P&L crosses zero. "
                "At default settings this reproduces the study's headline: ~1.7% at 6 "
                "staffed hours; drag hours to 32 and it climbs to ~2.7%.")

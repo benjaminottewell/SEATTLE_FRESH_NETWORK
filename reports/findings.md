@@ -130,7 +130,8 @@ kills the network**. Only the three densest corners stay positive (620 to 690
 transactions per day even at 1.5% capture), and only barely (+$32 to +$166 per day). A
 cherry-picked 3-store network is the surviving skeleton but with one important caveat: the
 hub's operating cost is still split across 10 stores in this table. Run only 3 stores
-and each store's hub share triples, which would sink even those three.
+and each store's hub share triples, which would sink even those three unless the
+commissary shrinks along with the network.
 
 **So the verdict is genuinely conditional, and this is the main boundary.** Under joint
 pessimism the 10-store concept fails. Feasibility lives or dies on the baseline

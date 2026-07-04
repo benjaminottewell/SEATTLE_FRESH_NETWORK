@@ -146,7 +146,7 @@ swept until the verdict changes:
 ## Honest limitations
 
 This model's job is to find tipping points, not to predict exact profits: every input is
-an explicit assumption, and the thresholds are the main finding. The baseline leans more
+an explicit assumption, and the thresholds are the main finding. The baseline leans
 optimistic. The busiest stores are projected at volumes only the busiest konbini reach,
 and rent is a flat $8k/month even though the optimizer deliberately picks the best
 corners downtown. The most important input, the capture rate, is **derived** (published

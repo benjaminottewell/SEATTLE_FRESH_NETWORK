@@ -22,6 +22,7 @@ ortools            # Google OR-Tools: CP-SAT + vehicle routing (VRPTW)
 # --- Data / demand / economics ---
 pandas
 numpy
+scipy              # fast nearest-corner lookups (cKDTree) in siting + the app
 pyyaml             # read assumptions.yaml
 requests           # Census API pulls
 
@@ -30,3 +31,4 @@ matplotlib
 
 # --- Interactive explorer (app/) ---
 streamlit
+pydeck             # app map layers; imported directly, so listed explicitly

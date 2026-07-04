@@ -1,6 +1,6 @@
 # Findings — Konbini-Inspired Fresh-Convenience Network, Seattle v1.0
 
-*Full narrative of the feasibility model: method, results, verdict, and limitations.
+*The full narrative of the feasibility model: method, results, verdict, and limitations.
 The condensed version lives in the [README](../README.md); every number below is
 reproducible via `python run_all.py`.*
 
@@ -9,16 +9,23 @@ reproducible via `python run_all.py`.*
 ## 1. The question
 
 Could a dense network of konbini-inspired, **low-labor automated fresh-convenience
-micro-stores** pencil out in Seattle's dense northern core — and how much automation and
-what store density does it take to flip it from infeasible to feasible?
+micro-stores** make money in Seattle's dense northern core? And how much automation and
+how many stores would it take to flip the answer from no to yes?
 
-The node being tested is *not* Amazon Go (which automated checkout only, kept prep/restock
-labor, and carried expensive sensor tech) and *not* a staffed store (Foxtrot — the closest
-U.S. attempt at staffed small-format urban fresh convenience, though premium-positioned and
-without konbini logistics — filed Chapter 7 in 2024). It is a small multi-SKU fresh store,
-replenished 2–3×/day from a SoDo commissary, run on ~6 on-site labor hours/day.
+It matters to be precise about the type of store being tested, because the two famous American
+attempts were different concepts. It is *not* Amazon Go, which automated checkout only,
+kept the restocking and food-prep labor, and paid for expensive sensor technology. It is
+*not* a staffed store either: Foxtrot, the closest U.S. attempt at small-format urban
+fresh convenience (premium-positioned, and without konbini-style logistics), filed
+Chapter 7 bankruptcy in 2024. The store tested here is a small shop selling a rotating
+range of short-shelf-life fresh food, restocked 2 to 3 times a day from a SoDo
+commissary (a central kitchen and warehouse), and run on about 6 paid on-site labor
+hours per day.
 
 ## 2. Method (the chain)
+
+The model is a chain of five phases. Each phase's output is the next phase's input, so
+the final economics inherit every upstream decision.
 
 | Phase | Model | Key output |
 |---|---|---|
@@ -34,60 +41,82 @@ Seattle City Clerk neighborhood boundaries, OpenStreetMap. All sources with link
 
 ## 3. Results by phase
 
-**Demand.** The northern core holds ~283k weighted daytime catchment. Worker-weighting is
-decisive: Capitol Hill ranks #1 by residents but #5 by demand once jobs dominate; the CBD
-(7.4k residents, 77k jobs) ranks #1. External cross-check: our 283k study-area jobs vs the
-Downtown Seattle Association's ~337k for its (larger) downtown definition.
+**Demand.** I measure demand pressure as a weighted daytime population: each worker
+counts as 1 and each resident as 0.5, because this format lives on daytime foot traffic
+and residents are partly elsewhere during the day. By that measure the northern core
+holds about 328,000 weighted catchment, with jobs contributing 283,000 of it. The worker
+weighting turned out to be decisive: Capitol Hill has the most residents of the seven
+neighborhoods but ranks only #5 in demand, while Downtown/CBD, with just 7,400 residents
+but 77,000 jobs, ranks #1. As an external sanity check, my 283k study-area jobs sit
+plausibly against the Downtown Seattle Association's ~337k count for its larger downtown
+definition.
 
-**Drive times.** All 7 neighborhood centers are 3.9–9.8 congested minutes from the SoDo hub —
-roughly 3× headroom inside the 30-minute fresh window. Within this land-contiguous core,
-**logistics reach is not the binding constraint**. (Cross-water expansion, where geography
-does bind, is deferred future work.)
+**Drive times.** I built a drivable street map from OpenStreetMap, estimated speeds from
+road types, and then slowed everything by 40% to approximate downtown traffic. Even with
+that penalty, every neighborhood center is only 3.9 to 9.8 minutes from the SoDo hub,
+against a 30-minute freshness deadline. **Reach is not the binding constraint** anywhere
+in this land-connected core; a van gets everywhere with roughly 3× time to spare.
+(Cross-water expansion, where geography does start to bind, is deferred to future work.)
 
-**Siting.** Demand concentration is extreme: 5 optimally-placed stores cover 64.8% of
-catchment; 10 cover 86.6%; 20 cover 99.0%. Marginal coverage collapses 16× from store #6
-(+21,411 catchment) to store #20 (+1,302). The optimizer reproduces konbini "area
-dominance" clustering unprompted — overlapping walksheds along the Belltown–CBD–Pioneer
-Square spine beat even spacing.
+**Siting.** Store placement uses MCLP, a classic coverage optimizer: given a budget of p
+stores, pick the street corners that put the most weighted population within a 5-minute
+walk (400 m) of at least one store. Demand turns out to be extremely concentrated: 5
+well-placed stores already cover 64.8% of the catchment, 10 cover 86.6%, and 20 cover
+99.0%. Each added store buys less than the one before it. Store #6 adds 21,411 catchment
+while store #20 adds only 1,302, a 16× collapse. Without being told to, the optimizer
+reproduced the konbini "area dominance" playbook: clusters of overlapping walksheds
+along the Belltown, Downtown, Pioneer Square spine beat spreading stores out evenly.
 
-**Routing.** The fresh window binds, not van capacity (loads run 9–42% of capacity while
-last handoffs land at minute 26–27 of 30). A van manages ~3 stops per run → 4 vans for 10
-stores → **$773/day total delivery cost ($77/store)**, fleet-dominated. Modeling note that
-mattered: the freshness clock stops at the last handoff (the paid return leg doesn't age
-goods) — counting the return inside the window would wrongly cost 5 vans/$946.
+**Routing.** A vehicle-routing solver (OR-Tools) plans refrigerated van runs from the
+SoDo hub to the stores under two limits: van capacity and the 30-minute freshness
+window. Vans leave far from full (9 to 42% of
+capacity) but their last handoffs land at minute 26 or 27 of the 30, so a van can only
+reach about 3 stores per run. Ten stores therefore need 4 vans, and the whole delivery
+operation costs **$773 per day, or $77 per store**, most of it fixed fleet cost rather
+than driver time. One modeling decision mattered a lot here: the freshness clock stops
+at the last handoff, because the drive back to the hub is paid time but does not age any
+food. Counting the return leg inside the window would have wrongly demanded a 5th van
+and $946 per day unnecessarily.
 
-**Economics.** At baseline (p=10, capture 2.5%, 6h labor):
+**Economics.** Every store gets a daily profit-and-loss test at two levels, at baseline
+settings (10 stores, 2.5% capture, 6 staffed hours):
 
-- **Pre-registered bar (contribution > 0): 10 of 10 stores clear it.** Break-even is only
-  88 transactions/day — the bar, committed before results, turned out generous; we report
-  it as registered.
-- **Fully loaded** (adding rent, hub allocation, amortized capex): **9 of 10 stores
-  positive**; the fringe store (~240 txns/day) loses ~$474/day. Median payback ≈ 0.5 years
-  (secondary lens; capex-assumption-dependent).
+- **Contribution, the pre-registered feasibility bar: 10 of 10 stores clear it.**
+  Contribution asks whether a day of operating pays for itself: revenue minus product
+  cost (including spoilage), the store's delivery share, and on-site labor. Break-even
+  turns out to be only 88 transactions per day. The bar, committed in
+  `assumptions.yaml` before any results existed, proved generous; I report it as
+  registered rather than move it after the fact.
+- **Fully loaded, the operator's view: 9 of 10 stores are positive.** This adds the
+  fixed bills: rent, the store's share of commissary operating cost, and store equipment
+  paid off over 7 years. The one failing store is the fringe store (~240 transactions
+  per day), which loses about $474 per day. Median payback on store capex is roughly
+  half a year (a secondary lens, since it depends directly on the capex guess).
 
 ## 4. The verdict and what flips it
 
-**Conditionally feasible. The condition is demand (capture rate); automation is the
-margin-maker at Seattle wages.**
+**Conditionally feasible. The condition is demand (the capture rate), and automation is
+what makes the margins work at Seattle wages.**
 
 | Threshold | Value |
 |---|---|
 | Median store fully-loaded break-even (automated, 6h) | **capture ≈ 1.7%** |
 | Median store fully-loaded break-even (staffed, 32h) | **capture ≈ 2.6%** |
-| Automation dividend (6h vs 32h @ $21.30/h) | **≈ $554/store-day ≈ 0.9pp of capture slack** |
-| Below capture ≈ 1.5% | Median store negative at any staffing level; only the densest corners persist (5 of 10 at 1.5%, 1 of 10 at 1.0%) |
-| Viable network size at baseline | Formally evaluated at p=10: 9 of 10 viable. Marginal-store arithmetic (revenue vs cost incl. hub share) puts the ceiling in the mid-teens — not formally optimized |
+| Automation dividend (6h vs 32h at $21.30/h) | **≈ $554 per store-day ≈ 0.9 percentage points of capture** |
+| Below capture ≈ 1.5% | The median store is negative at any staffing level; only the densest corners persist (5 of 10 at 1.5%, 1 of 10 at 1.0%) |
+| Viable network size at baseline | Formally evaluated at p=10: 9 of 10 viable. Rough marginal-store arithmetic (revenue vs cost including hub share) puts the ceiling in the mid-teens; not formally optimized |
 
-The staffed reference case sits almost exactly at break-even at baseline demand — an
-independent rhyme with Foxtrot's real-world failure. Automation doesn't create demand; it
-widens the demand band in which the concept survives — from "needs konbini-tier adoption"
-(~2.6%) to "needs good adoption" (~1.7%).
+Two readings of that table. First, the staffed version of this store sits almost exactly
+at break-even at baseline demand. Second, automation does not create demand; it widens the band of
+demand in which the concept survives, from "needs Japanese konbini-tier adoption" (~2.6% of the
+walkshed buying daily) down to "needs good adoption" (~1.7%).
 
-### Stress case: what if we're wrong about everything at once?
+### Stress case: what if I'm wrong about everything at once?
 
-The sweeps above vary one parameter at a time; bad worlds correlate. `src/econ/stress.py`
-sets four levers **jointly adverse** (capture 1.5%, rent $12k/mo, spoilage 15%, wage $26 —
-each inside its swept range) and re-runs the P&L:
+The sweeps above vary one parameter at a time, but bad worlds come correlated.
+`src/econ/stress.py` sets four levers adverse at the same time (capture 1.5%, rent
+$12k/month, spoilage 15%, wage $26/hour, each still inside its swept range) and re-runs
+the P&L:
 
 | | Baseline | **Stress** |
 |---|---|---|
@@ -95,28 +124,31 @@ each inside its swept range) and re-runs the P&L:
 | Fully-loaded positive stores | 9 / 10 | **3 / 10** |
 | Network fully-loaded total | +$6,211/day | **−$3,486/day** |
 
-Read: the *variable* economics survive even joint pessimism (every store still covers
-product, delivery, and labor), but the **fixed-cost stack — rent, hub allocation, capex —
-kills the network**: only the three densest corners (~620–690 txns/day even at 1.5%
-capture) stay positive, and only barely (+$32 to +$166/day). A cherry-picked 3-store
-network is the surviving skeleton — with the caveat that hub opex is still allocated
-across 10 stores here; at p=3 the hub share triples and would sink those too unless the
-commissary shrinks with the network.
+The reading: even under joint pessimism every store still covers its variable costs
+(product, delivery, labor), but the **fixed-cost stack of rent, hub share, and capex
+kills the network**. Only the three densest corners stay positive (620 to 690
+transactions per day even at 1.5% capture), and only barely (+$32 to +$166 per day). A
+cherry-picked 3-store network is the surviving skeleton but with one important caveat: the
+hub's operating cost is still split across 10 stores in this table. Run only 3 stores
+and each store's hub share triples, which would sink even those three.
 
-**So the verdict is genuinely conditional, and this is the boundary:** under joint
+**So the verdict is genuinely conditional, and this is the main boundary.** Under joint
 pessimism the 10-store concept fails. Feasibility lives or dies on the baseline
-assumptions being roughly right — chiefly capture — which is exactly why they are
-sourced, derived, and swept rather than asserted.
+assumptions being roughly right, chiefly capture, which is exactly why every assumption
+is sourced, derived, and swept rather than asserted.
 
 ## 5. Honest limitations
 
-- **Baseline optimism.** Top-store volumes (1,100+ txns/day) are busiest-konbini territory;
-  the thresholds, not the point estimates, are the finding.
-- **Rent is flat** ($8k/mo — now derived from Seattle CBD asking rents of ~$46/sqft on a
-  ~1,200–1,600 sqft footprint) while the model deliberately picks the best corners downtown;
-  a per-store rent *surface* (prime corners cost more) remains the refinement.
-- **Capture rate is derived, not measured** (cited volumes ÷ our computed walkshed
-  populations). It is the star sensitivity for exactly this reason.
+- **The baseline is optimistic.** The busiest stores are projected at 1,100+
+  transactions per day, which is territory only the busiest konbini reach. The
+  thresholds, not the point estimates, are the finding.
+- **Rent is flat** at $8k/month (derived from Seattle CBD asking rents of ~$46/sqft on a
+  1,200 to 1,600 sqft footprint) even though the model deliberately picks the best
+  corners downtown. A per-store rent surface, where prime corners cost more, is the
+  natural refinement.
+- **The capture rate is derived, not measured**: published store transaction volumes
+  divided by my computed walkshed populations. That is exactly why it is the star
+  sensitivity.
 - **Theft and external shrink are not modeled.** The spoilage rate covers waste from
   unsold fresh goods, not loss from theft. A store staffed for only a few hours a day in
   downtown Seattle carries real shrink risk, and solving exactly this problem is part of
@@ -126,14 +158,14 @@ sourced, derived, and swept rather than asserted.
   rate, with no ramp-up period, no marketing spend, and no habit-building phase. A real
   launch would lose money for months while capture climbs toward its resting level, so
   the model understates early cash needs even where the daily P&L clears the bar.
-- **Uniform dasymetric split** of tract population across street corners; LODES is
-  block-level and would sharpen this.
-- **Delivery share held constant** across economic sweeps (defensible: the fleet is
-  window-bound, so cost is ~independent of demand volume) and split equally across stores.
-- **Assumed operational numbers**: hub opex, vehicle costs, product margin, spoilage,
-  visit frequency, capex — all flagged in the table below and swept where starred.
-- **No notebooks**: the narrative lives in documented `src/` scripts + `run_all.py`
-  (a deliberate deviation from the original plan; notebooks remain future work).
+- **Population is spread evenly across street corners** within each tract piece. The
+  jobs data exists at block level and would sharpen this.
+- **The delivery share is held constant** across the economic sweeps (defensible: the
+  fleet is sized by the time window, so its cost barely moves with demand volume) and
+  split equally across stores.
+- **Several operating numbers are assumed**: hub opex, vehicle costs, product margin,
+  spoilage, visit frequency, capex. All are flagged in the table below and swept where
+  starred.
 
 ## 6. Assumption table
 
@@ -169,22 +201,30 @@ notes and derivations, and [SOURCES.md](../SOURCES.md) for citations.
 | `economics.spoilage_rate` | 0.08 | 0.03–0.15 | assumed | ⭐ |
 | `economics.hub_opex_per_day` | 5000 |  | assumed |  |
 
-**Pre-registered feasibility bar** (committed before results): primary — contribution
-margin per node > 0 (revenue − product incl. spoilage − delivery share − direct labor);
-secondary — payback < 5 years.
+**Pre-registered feasibility bar** (committed before results): primary, contribution
+margin per store > 0 (revenue minus product including spoilage, delivery share, and
+direct labor); secondary, payback under 5 years.
 
 ## 7. Future work
 
-Cross-water expansion (Ballard/Eastside — where Seattle's geography actually bites);
-per-store rent surfaces; block-level dasymetric demand; distance-weighted gravity demand;
-network-distance walksheds; joint location-routing (LRP) instead of the fixed-hub
-decomposition; stochastic demand + discrete-event simulation; time-of-day demand;
-consumer demand sensing as a richer input layer; notebook narrative.
+- **Cross-water expansion** (Ballard, the Eastside): the geography that actually
+  stresses the delivery window.
+- **A per-store rent surface** instead of one flat rent.
+- **Block-level demand** instead of spreading tract populations evenly across corners.
+- **Distance-decayed (gravity) demand**: people next to a store should count for more
+  than people at the walkshed edge.
+- **Walksheds along the street network** instead of straight-line circles.
+- **Joint location-routing (LRP)**: optimize siting and routing together instead of the
+  fixed-hub shortcut.
+- **Demand uncertainty**: stochastic demand and discrete-event simulation instead of
+  steady daily averages, plus time-of-day patterns.
+- **Consumer demand sensing** as a richer input layer.
 
-**Format generalization.** The pipeline is a general feasibility engine for
-hub-replenished walk-up node networks; the konbini micro-store is one parameter file.
-A single-product automated kiosk (premium drink machines and similar vending-first
-formats) is the natural second case: swap capex, labor (restock folds into the delivery
-stop), walkshed radius, ticket, and cadence in `assumptions.yaml` and re-run. Model
-prediction worth testing: at kiosk scale the binding constraint flips from the fresh
-window to machine capacity.
+**Format generalization.** The pipeline is really a general feasibility engine for any
+"many small nodes, restocked from one hub, serving walk-up demand" concept; the konbini
+micro-store is just one parameter file. A single-product automated kiosk (drink/food
+machines and similar vending-first formats) is the natural second case: swap capex,
+labor (restocking folds into the delivery stop), walkshed radius, ticket size, and
+delivery cadence in `assumptions.yaml` and re-run. One model prediction worth testing:
+at kiosk scale the binding constraint flips from the freshness window to the machine
+capacity.

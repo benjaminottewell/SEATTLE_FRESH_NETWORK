@@ -34,12 +34,6 @@ expansion (Ballard, Eastside) is documented future work, not built.
 - **Report honestly.** "Infeasible under current Seattle wages unless density exceeds Y" is
   a strong result, not a failure.
 
-## Working with the user
-The user is **new to a lot of this** and wants to learn by doing. Explain what you're doing
-and why, in plain language. Prefer small, reviewable steps over large autonomous dumps.
-Lean toward cutting scope when something gets heavy — a finished small thing beats a
-half-built big one.
-
 ## Repo conventions
 - Cache every external pull (Census, OSM) to `data/raw/`. Never commit large raw data
   (see `.gitignore`).
@@ -53,14 +47,14 @@ with time windows (MDCVRP-TW), per a U.S. food-desert grocery-hub study. We diff
 labor/geography economics. Siting uses **MCLP** (maximal covering, fixed p) — not p-median.
 
 ## Status
-- **Phases 0–5: core chain COMPLETE** — demand (real ACS/LODES data) → siting (MCLP,
-  p-sweep) → routing (VRPTW, window-bound fleet) → economics (per-store P&L vs the
-  pre-registered bar + capture/automation sensitivity sweeps).
-- Headline: pre-registered contribution bar clears everywhere in the swept range;
+- **v1.0 shipped (July 2026).** Full chain complete and published: demand (real
+  ACS/LODES data) → siting (MCLP, p-sweep) → routing (VRPTW, window-bound fleet) →
+  economics (per-store P&L vs the pre-registered bar + sensitivity sweeps +
+  joint-pessimism stress case). Repo is public with a live Streamlit demo (link in
+  the README); full run reproduces in ~3 minutes via `run_all.py`.
+- Headline: the pre-registered contribution bar clears everywhere in the swept range;
   fully-loaded viability is conditional — median store positive above ~1.7% capture
   (baseline 2.5% ⇒ 9/10 stores viable); automation (6h vs 32h staffing) is worth
-  ~$550/store-day ≈ ~0.9pp of capture-rate slack.
-- **Phase 6 (polish & ship) remains:** README verdict + figures, findings.md,
-  reproducibility check, docstrings cleanup. Some assumptions still
-  `assumed` (rent, capex, visit_frequency, resident_weight) — candidates for
-  grounding or explicit limitations. See `SEATTLE_PLAN.md`.
+  ~$554/store-day ≈ ~0.9pp of capture-rate slack.
+- Open ideas (deliberately deferred) live in the Future work sections of the README
+  and `reports/findings.md`.

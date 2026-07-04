@@ -260,8 +260,18 @@ def plot_capture_sensitivity(cap, baseline, output_path=None):
     ax1.step(x, cap["stores_fully_loaded_pos"], where="post", linewidth=2.5,
              color="#e4572e", label="Fully loaded (rent + hub + capex)")
     ax1.axvline(baseline * 100, color="gray", linestyle="--", linewidth=1.5)
-    ax1.annotate("baseline", (baseline * 100, ax1.get_ylim()[1] * 0.05),
+    ax1.annotate(f"baseline {baseline * 100:.1f}%",
+                 (baseline * 100, ax1.get_ylim()[1] * 0.05),
                  rotation=90, fontsize=11, color="gray", ha="right")
+    bar = cap["stores_clearing_bar"]
+    if bar.nunique() == 1:
+        # the flat line is a finding, not a bug -- say so on the chart itself
+        ax1.annotate(
+            f"clears for all {bar.iloc[0]} stores across the entire sweep:\n"
+            "variable economics never bind; the fight is over fixed costs",
+            (x.iloc[0] + 0.05, bar.iloc[0] - 0.4), fontsize=11.5,
+            color=BAR_COLOR, va="top", zorder=6,
+            bbox=dict(facecolor="white", edgecolor="none", alpha=0.85, pad=2))
     ax1.set_ylabel("Viable stores (of 10)")
     ax1.set_title("The verdict vs. the star parameter: capture rate")
     ax1.legend(loc="lower right", fontsize=12)
@@ -269,6 +279,15 @@ def plot_capture_sensitivity(cap, baseline, output_path=None):
     ax2.plot(x, cap["median_fully_loaded"], color="#e4572e", linewidth=2.5)
     ax2.axhline(0, color="black", linewidth=1)
     ax2.axvline(baseline * 100, color="gray", linestyle="--", linewidth=1.5)
+    med, xs = cap["median_fully_loaded"].tolist(), x.tolist()
+    for i in range(1, len(med)):
+        if med[i - 1] < 0 <= med[i]:
+            frac = -med[i - 1] / (med[i] - med[i - 1])
+            flip = xs[i - 1] + frac * (xs[i] - xs[i - 1])
+            ax2.plot([flip], [0], "o", color="#e4572e", markersize=9, zorder=5)
+            ax2.annotate(f"median store flips positive at ~{flip:.1f}%",
+                         (flip + 0.07, 70), fontsize=11.5, color="#e4572e")
+            break
     ax2.set_xlabel("Capture rate (% of daytime catchment transacting per day)")
     ax2.set_ylabel("Median store\nfully-loaded $/day")
 

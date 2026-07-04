@@ -255,23 +255,18 @@ def plot_capture_sensitivity(cap, baseline, output_path=None):
                                    height_ratios=[3, 2])
     x = cap["capture_rate"] * 100
 
-    ax1.step(x, cap["stores_clearing_bar"], where="post", linewidth=2.5,
-             color=BAR_COLOR, label="Pre-registered bar (contribution > 0)")
+    bar = cap["stores_clearing_bar"]
+    bar_label = "Pre-registered bar (contribution > 0)"
+    if bar.nunique() == 1:
+        # the flat line is a finding, not a bug -- note it where the eye already goes
+        bar_label += f"\nflat by result: all {bar.iloc[0]} stores clear it at every rate"
+    ax1.step(x, bar, where="post", linewidth=2.5, color=BAR_COLOR, label=bar_label)
     ax1.step(x, cap["stores_fully_loaded_pos"], where="post", linewidth=2.5,
              color="#e4572e", label="Fully loaded (rent + hub + capex)")
     ax1.axvline(baseline * 100, color="gray", linestyle="--", linewidth=1.5)
     ax1.annotate(f"baseline {baseline * 100:.1f}%",
                  (baseline * 100, ax1.get_ylim()[1] * 0.05),
                  rotation=90, fontsize=11, color="gray", ha="right")
-    bar = cap["stores_clearing_bar"]
-    if bar.nunique() == 1:
-        # the flat line is a finding, not a bug -- say so on the chart itself
-        ax1.annotate(
-            f"clears for all {bar.iloc[0]} stores across the entire sweep:\n"
-            "variable economics never bind; the fight is over fixed costs",
-            (x.iloc[0] + 0.05, bar.iloc[0] - 0.4), fontsize=11.5,
-            color=BAR_COLOR, va="top", zorder=6,
-            bbox=dict(facecolor="white", edgecolor="none", alpha=0.85, pad=2))
     ax1.set_ylabel("Viable stores (of 10)")
     ax1.set_title("The verdict vs. the star parameter: capture rate")
     ax1.legend(loc="lower right", fontsize=12)

@@ -6,9 +6,8 @@ micro-stores** in Seattle's dense core. This project is built on real census, jo
 with every assumption flagged and the load-bearing ones swept (tested across a range of
 values to find where the verdict changes).
 
-<!-- LIVE DEMO SLOT: after deploying on Streamlit Community Cloud, replace this
-     comment with a line like:
-     **▶ [Live demo](https://YOUR-APP.streamlit.app)** — no install needed. -->
+**▶ [Live demo](https://mij4pkvfcvprwshdzighpg.streamlit.app)** — explore the model in
+your browser, no install needed.
 
 > **Verdict: conditionally feasible.** The condition that is most important to success is, unsurprisingly, demand.
 > In this model, demand comes down to the **capture rate**: out of everyone within a short
@@ -34,9 +33,7 @@ and reports the **capture rate it would need to break even**. Drag the staffing 
 and the study's headline thresholds (~1.7% automated vs ~2.6% staffed) will reproduce on
 screen.
 
-<!-- SCREENSHOT SLOT: run the app, capture the map with the metric row visible,
-     save it as docs/figures/app_explorer.png, then replace this comment with:
-     ![The interactive explorer](docs/figures/app_explorer.png) -->
+![The interactive explorer](docs/figures/app_explorer.png)
 
 ```bash
 python -m streamlit run app/app.py

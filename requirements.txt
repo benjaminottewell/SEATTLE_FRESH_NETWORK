@@ -22,18 +22,11 @@ ortools            # Google OR-Tools: CP-SAT + vehicle routing (VRPTW)
 # --- Data / demand / economics ---
 pandas
 numpy
-scikit-learn       # demand modeling helpers
-statsmodels        # demand modeling helpers
 pyyaml             # read assumptions.yaml
 requests           # Census API pulls
 
 # --- Visualization ---
 matplotlib
-plotly
-folium             # interactive Leaflet maps
-
-# --- Notebooks ---
-jupyter
 
 # --- Interactive explorer (app/) ---
 streamlit

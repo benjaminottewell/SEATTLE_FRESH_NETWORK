@@ -43,7 +43,7 @@ half-built big one.
 ## Repo conventions
 - Cache every external pull (Census, OSM) to `data/raw/`. Never commit large raw data
   (see `.gitignore`).
-- Notebooks (`notebooks/01..05`) are the narrative; reusable logic goes in `src/`.
+- `run_all.py` + documented `src/` scripts are the narrative (no notebooks).
 - Pin versions only after a clean install (lock what actually worked).
 
 ## Methodological positioning (Related Work)
@@ -61,6 +61,6 @@ labor/geography economics. Siting uses **MCLP** (maximal covering, fixed p) — 
   (baseline 2.5% ⇒ 9/10 stores viable); automation (6h vs 32h staffing) is worth
   ~$550/store-day ≈ ~0.9pp of capture-rate slack.
 - **Phase 6 (polish & ship) remains:** README verdict + figures, findings.md,
-  reproducibility check, notebooks/docstrings cleanup. Some assumptions still
+  reproducibility check, docstrings cleanup. Some assumptions still
   `assumed` (rent, capex, visit_frequency, resident_weight) — candidates for
   grounding or explicit limitations. See `SEATTLE_PLAN.md`.

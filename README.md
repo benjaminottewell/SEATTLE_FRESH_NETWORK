@@ -1,16 +1,18 @@
 # Can Seattle Support a Japan-Style Fresh-Convenience Network?
 
-**A logistics + operations feasibility model** — demand → store siting → delivery routing →
-unit economics, for a konbini-inspired network of **low-labor automated fresh-convenience
-micro-stores** in Seattle's dense core. This project is built on real census, jobs, and street-network data,
-with every assumption flagged and the load-bearing ones swept (tested across a range of
-values to find where the verdict changes).
+**TL;DR:** Japanese konbini sell genuinely good fresh food on practically every corner,
+and I wanted to know if that could work in Seattle. So I built a model that tests the
+whole chain for a network of small, mostly automated fresh-food stores: where they
+should go, whether vans can keep them stocked from one central kitchen, and whether each
+store actually makes money, all built on real census, jobs, and street data. The short
+answer: it can work, but demand is what decides everything. A store needs roughly 1 in 60 of the
+people within a five-minute walk to buy something each day. Automation helps the margins
+a lot, but it can't save a store that people don't visit.
 
-**▶ [Live demo](https://mij4pkvfcvprwshdzighpg.streamlit.app)** — explore the model in
+**▶ [Live demo](https://mij4pkvfcvprwshdzighpg.streamlit.app):** explore the model in
 your browser, no install needed.
 
-> **Verdict: conditionally feasible.** The condition that is most important to success is, unsurprisingly, demand.
-> In this model, demand comes down to the **capture rate**: out of everyone within a short
+> **Verdict: conditionally feasible.** In this model, demand comes down to one number, the **capture rate**: out of everyone within a short
 > walk of a store (its walkshed, roughly a 5-minute or 400 meter radius), the share who
 > actually buy something on a given day. The median store turns fully-loaded positive
 > (profitable with every cost counted, rent and equipment included) above a **~1.7%
@@ -18,8 +20,7 @@ your browser, no install needed.
 > Automation level is also a margin-maker, especially with Seattle wages: cutting on-site labor from a staffed
 > model (32 h/day) to an automated one (6 h/day) is worth **~$554 per store-day**, moving
 > the required capture from ~2.6% down to ~1.7%. Below ~1.5% capture the median store
-> loses money at any staffing level. So, automation widens the viable band but cannot rescue
-> a store from low demand, with only the densest few corners staying positive.
+> loses money at any staffing level, and only the densest few corners stay open.
 
 ![The verdict vs. the star parameter](docs/figures/sensitivity_capture.png)
 

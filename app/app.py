@@ -101,13 +101,18 @@ stores["fully_loaded"] = (stores["contribution"] - fx["rent_day"]
 cost_stack = (fx["delivery_share"] + hours * wage + fx["rent_day"]
               + fx["hub_day"] / p + amort_day)
 stores["breakeven_capture"] = cost_stack / (stores["catchment"] * ticket * margin)
+# Payback mirrors src/econ/economics.py: pre-capex cash flow repays the store's capex;
+# NA for stores whose cash flow never gets there.
+cash_day = stores["fully_loaded"] + amort_day
+stores["payback_years"] = (fx["capex"] / cash_day / 365).where(cash_day > 0)
 
 # ---------------- header + metrics ----------------
 st.title("Seattle Fresh-Network Explorer")
 st.caption("Exploratory companion to the v1.0 feasibility model — see the README for "
            "the defended analysis, sources, and the pre-registered feasibility bar.")
 
-c1, c2, c3, c4, c5, c6, c7 = st.columns(7)
+net_cash = float((stores["fully_loaded"] + amort_day).sum())
+c1, c2, c3, c4 = st.columns(4)
 c1.metric("Catchment covered", f"{covered / total:.0%}",
           help="Share of the weighted daytime population (workers + 0.5×residents) "
                "within a walkshed of at least one store.")
@@ -118,22 +123,29 @@ c3.metric("Network profit, fully loaded", f"${stores['fully_loaded'].sum():,.0f}
                "with all costs in (the commissary is fully paid for across stores). "
                "Default settings reproduce the study's baseline of about +\\$6.2k/day; "
                "its joint-pessimism stress case lands at −\\$3.5k/day.")
-c4.metric("Stores with contribution > 0", f"{int((stores['contribution'] > 0).sum())} of {p}",
+c4.metric("Network payback",
+          f"{fx['capex'] * p / net_cash / 365:.1f} years" if net_cash > 0 else "never",
+          help="Years for the whole network's pre-capex cash flow (losing stores "
+               "included) to repay every store's automation capex. The study's "
+               "pre-registered secondary bar is payback under 5 years; baseline "
+               "lands around 0.6.")
+c5, c6, c7, c8 = st.columns(4)
+c5.metric("Stores with contribution > 0", f"{int((stores['contribution'] > 0).sum())} of {p}",
           help="Contribution = revenue − product cost (incl. spoilage) − delivery share "
                "− on-site labor. The study's pre-registered feasibility bar.")
-c5.metric("Fully-loaded positive", f"{int((stores['fully_loaded'] > 0).sum())} of {p}",
+c6.metric("Fully-loaded positive", f"{int((stores['fully_loaded'] > 0).sum())} of {p}",
           help="Contribution minus the fixed stack: rent, the store's share of commissary "
                "(hub) operating cost, and automation capex amortized over 7 years. "
                "The 'all costs in' operator view.")
-c6.metric("Median store, fully loaded", f"${stores['fully_loaded'].median():,.0f}/day",
+c7.metric("Median store, fully loaded", f"${stores['fully_loaded'].median():,.0f}/day",
           help="The middle store's daily profit with all costs in — the number the "
                "study's verdict thresholds are quoted on.")
-c7.metric("Median break-even capture", f"{stores['breakeven_capture'].median():.1%}",
+c8.metric("Median break-even capture", f"{stores['breakeven_capture'].median():.1%}",
           help="Capture rate at which the median store's fully-loaded P&L crosses zero. "
                "At default settings this reproduces the study's headline: ~1.7% at 6 "
                "staffed hours; drag hours to 32 and it climbs to ~2.7%.")
 
-with st.expander("What do 'contribution', 'fully loaded', and 'break-even capture' mean?"):
+with st.expander("What do 'contribution', 'fully loaded', 'break-even capture', and 'payback' mean?"):
     st.markdown(
         "Each store's daily P&L is computed two ways:\n\n"
         "1. **Contribution** *(the pre-registered feasibility bar)* — does the store "
@@ -144,6 +156,9 @@ with st.expander("What do 'contribution', 'fully loaded', and 'break-even captur
         "3. **Break-even capture** — the fully-loaded equation solved for the capture "
         "rate that makes it zero: the share of its walkshed a store must win each day "
         "to justify every cost it carries.\n\n"
+        "4. **Payback** — years for a store's pre-capex cash flow (fully-loaded profit "
+        "with the amortization line added back) to repay its automation capex. The "
+        "study's pre-registered secondary bar: under 5 years. Blank means never.\n\n"
         "A store can clear the contribution bar yet lose money fully loaded — that gap "
         "is exactly where the joint-pessimism stress case kills the network (see the "
         "README verdict and `reports/findings.md`).")
@@ -185,7 +200,7 @@ st.caption("Blue dots = demand at street corners (size = catchment). Circles = c
 
 # ---------------- per-store table ----------------
 show = stores[["label", "neighborhood", "txns_day", "revenue", "contribution",
-               "fully_loaded", "breakeven_capture"]].copy()
+               "fully_loaded", "payback_years", "breakeven_capture"]].copy()
 show["breakeven_capture"] = show["breakeven_capture"] * 100
 show = show.sort_values("contribution", ascending=False).reset_index(drop=True)
 show.index = [f"store {i + 1}" for i in show.index]
@@ -196,6 +211,7 @@ st.dataframe(show, width="stretch", column_config={
     "revenue": st.column_config.NumberColumn("Revenue ($/day)", format="$%.0f"),
     "contribution": st.column_config.NumberColumn("Contribution ($/day)", format="$%.0f"),
     "fully_loaded": st.column_config.NumberColumn("Fully loaded ($/day)", format="$%.0f"),
+    "payback_years": st.column_config.NumberColumn("Payback (years)", format="%.1f"),
     "breakeven_capture": st.column_config.NumberColumn("Break-even capture", format="%.2f%%"),
 })
 st.caption("Delivery share fixed at the Phase-4 baseline ($77/store-day; the fleet is "

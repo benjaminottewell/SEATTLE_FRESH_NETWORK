@@ -103,6 +103,17 @@ if __name__ == "__main__":
     print(f"Break-even (contribution bar): {breakeven_txns:,.0f} transactions/day per store")
     med_payback = pnl.loc[pnl['fully_loaded'] > 0, 'payback_years'].median()
     print(f"Median payback among viable stores: {med_payback:.1f} years")
+    # Network view: one investor funds every store's capex and the combined
+    # cash flow (losing stores included) has to repay it.
+    capex = get_value(a, "economics", "automation_capex_per_store")
+    amort_day = capex / (get_value(a, "economics", "capex_amortization_years") * 365)
+    network_cash = (pnl["fully_loaded"] + amort_day).sum()
+    if network_cash > 0:
+        net_payback = capex * len(pnl) / network_cash / 365
+        print(f"Network payback (all {len(pnl)} stores' capex vs combined cash flow): "
+              f"{net_payback:.1f} years")
+    else:
+        print("Network payback: never (combined cash flow is negative)")
 
     out = PROJECT_ROOT / "outputs" / "tables" / "store_pnl_baseline.csv"
     pnl.drop(columns="geometry").round(1).to_csv(out, index=False)

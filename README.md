@@ -1,7 +1,7 @@
 # Can Seattle Support a Japan-Style Fresh-Convenience Network?
 
-**TL;DR:** Japanese konbini sell genuinely good fresh food on practically every corner,
-and I wanted to know if that could work in Seattle. So I built a model that tests the
+**TL;DR:** Japanese konbini sell very good fresh food on practically every corner,
+and I was curious about if that could work in Seattle. So I built a model that tests the
 whole chain for a network of small, mostly automated fresh-food stores: where they
 should go, whether vans can keep them stocked from one central kitchen, and whether each
 store actually makes money, all built on real census, jobs, and street data. The short
@@ -10,7 +10,7 @@ people within a five-minute walk to buy something each day. Automation helps the
 a lot, but it can't save a store that people don't visit.
 
 **▶ [Live demo](https://mij4pkvfcvprwshdzighpg.streamlit.app):** explore the model in
-your browser, no install needed.
+your browser.
 
 > **Verdict: conditionally feasible.** In this model, demand comes down to one number, the **capture rate**: out of everyone within a short
 > walk of a store (its walkshed, roughly a 5-minute or 400 meter radius), the share who
